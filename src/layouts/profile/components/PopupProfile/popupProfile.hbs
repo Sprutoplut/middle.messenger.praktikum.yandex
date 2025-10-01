@@ -1,0 +1,7 @@
+{{#> Popup title=PopupTitle buttonText=PopupBtnText formID=PopupFormID enctype="multipart/form-data" red=popupRed isError=PopupError}}
+    {{#if nameFile}}
+        <p>{{nameFile}}</p>
+    {{else}}
+        {{> InputFile}}
+    {{/if}}
+{{/Popup}}

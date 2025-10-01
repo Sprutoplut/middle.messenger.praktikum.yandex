@@ -1,0 +1,59 @@
+@import '@src/variables.less';
+
+.chat__list__member
+{
+    margin-top: 2px;
+    margin-bottom: 2px;
+    .flex-row(center,space-between);
+    width: 100%;
+    padding: 12px 10px;
+    gap:10px;
+    .last-message
+    {
+        height: 30px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        .font(12px,@text-color-second);
+        line-height: 125%;
+        span
+        {
+            color: black;
+        }
+    }
+}
+.list__member__check
+{
+    background-color: #e4edfd;
+}
+.chat__list__member__content
+{
+    .flex-column(start,start);
+    height: 100%;
+    gap: 4px;
+    width: 100%;
+}
+.chat__list__member__dop
+{
+    .flex-column(center,space-between);
+    height: 100%;
+    margin-left: 20px;
+}
+.member-name
+{
+    .font();
+    font-weight: 600;
+}
+.message-date
+{
+    .font(9px,@text-color-second);
+}
+.message-count
+{
+    padding: 4px;
+    background-color: @primary-color;
+    .font(11px,#FFF);
+    text-align: center;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+}
