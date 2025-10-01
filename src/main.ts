@@ -2,7 +2,7 @@ import Handlebars from "handlebars";
 import * as Components from './components';
 import * as Pages from './pages';
 import * as Layouts from './layouts';
-import ImgPeople from '/img/PhotoPeople.png';
+import ImgPeople from './assets/img/PhotoPeople.png';
 
 const pages = {
     'login': [Pages.LoginPage,Layouts.LoginLayout,{textLink: "Нет аккаунта ?", textError: "Неверный пароль" , isError: "true", id_form: "login",nameForm: "Вход"}],
