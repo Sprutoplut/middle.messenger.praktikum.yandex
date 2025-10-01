@@ -1,0 +1,1 @@
+export {default as PopupChat} from './popupChat.hbs?raw';

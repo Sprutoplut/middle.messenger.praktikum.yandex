@@ -1,0 +1,14 @@
+<div class="dialog-container">
+    <form class="dialog" id="{{formID}}" enctype="{{enctype}}">
+        <h2 class="dialog__title title__{{red}}">{{title}}</h2>
+        <div class="dialog__body">
+            {{> @partial-block}}
+        </div>
+        <div class="dialog__footer"> 
+            {{#if isError}}
+                {{> LabelError text="Нужно выбрать файл"}}
+            {{/if}}
+            {{> Button buttonID=buttonID text=buttonText}}
+        </div>
+    </form>
+</div>

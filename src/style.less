@@ -1,0 +1,55 @@
+@import 'variables.less';
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+html, body, main {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    
+}
+body {
+    font-family: "Inter", sans-serif;
+    font-weight: 500;
+    line-height: 100%;
+    .font();
+}    
+h1
+{
+    .font(20px);
+    font-weight: 500;
+    line-height: 100%;
+}
+button
+{
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    font-family: "Inter", sans-serif;
+    &:focus,&:hover
+    {
+        background: #4FA684;
+    }
+}
+a
+{
+    transition: 0.3s;
+    text-decoration: none;
+    &:focus,&:hover
+    {
+        color: #4FA684;
+    }
+}
+h2
+{
+    .font(15px);
+}
+input
+{
+    font-family: "Inter", sans-serif;
+}
