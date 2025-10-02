@@ -1,0 +1,37 @@
+@import '@src/variables.less';
+
+.input__box {
+    .flex-column(start,start);
+    position: relative;
+    input {
+        width: 280px;
+        padding: 7px 0px;
+        border: none;
+        border-bottom: solid 1px @primary-color;
+        &:focus 
+        {
+            border: none;
+            outline: none;
+            border-bottom: solid 1px @primary-color;
+        }
+        &::placeholder
+        {
+            .font(13px,@text-color-second)
+        }
+    }
+    label {
+        opacity: 0;
+        transform: translateY(-100%);
+        transition: all 0.3s ease;
+        position: absolute;
+        border-radius: 4px;
+        margin-bottom: -20px;
+        .font(9px,@text-color-second)
+    }
+    input:focus + label,
+    input:not(:placeholder-shown) + label {
+        transform: translateY(-100%);
+        opacity: 1;
+        
+    }
+}

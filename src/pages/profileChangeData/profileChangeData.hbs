@@ -1,0 +1,9 @@
+<form class="profile__list" id="{{idForm}}">
+    {{> RowInputProfile name="Почта" nameValue="email" value="pochta@yandex.ru" type="email" autocomplete="email"}}
+    {{> RowInputProfile name="Логин" nameValue="login" value="ivanivanov" type="text" autocomplete="login"}}
+    {{> RowInputProfile name="Имя" nameValue="first_name" value="Иван" type="text" autocomplete="given-name"}}
+    {{> RowInputProfile name="Фамилия" nameValue="second_name" value="Иванов" type="text" autocomplete="family-name"}}
+    {{> RowInputProfile name="Имя в чате" nameValue="display_name" value="Иван" type="text" autocomplete="given-name"}}
+    {{> RowInputProfile name="Телефон" nameValue="phone" value="+7 (909) 967 30 30" type="tel" autocomplete="tel"}}
+    <input name="avatar" id="profile-avatar" type="file">
+</form>

@@ -1,0 +1,62 @@
+{{#if isContextMenu}}
+    {{#if isShowAdd}}
+        {{> PopupChat PopupTitle="Добавить пользователя" PopupBtnText="Добавить" PopupFormID="formPeopleAdd"}}
+    {{/if}}
+    {{#if isShowRemove}}
+        {{> PopupChat PopupTitle="Удалить пользователя" PopupBtnText="Удалить" PopupFormID="formPeopleRemove"}}
+    {{/if}}
+{{/if}}
+<section class="section__chat">
+    <div class="chat__list">
+        <div class="chat__list__header">
+            <div class="chat__list__header-a">
+                <a href="">
+                    Профиль
+                    <img src="/img/ProfileArrow.png" alt="">
+                </a>
+            </div>
+            <form id="search">
+                <input class="input__search" name="list-search" id="list-search" placeholder="Поиск" type="search">
+            </form>
+        </div>
+        <div class="box-list-line">
+            <div class="list-line"></div>
+        </div>
+        <ul class="chat__list__content">
+            {{#each members}}
+                {{> MemberList}}
+                <div class="box-list-line">
+                    <div class="list-line"></div>
+                </div>
+            {{/each}}
+        </ul>
+    </div>
+    <div class="chat__message">
+        {{#if check}}
+            <p>Выберите чат чтобы отправить сообщение</p>
+        {{else}}
+            <div class="chat__message__header">
+                <div class="chat__message__header-name">
+                    <img src={{photo_up}} alt="">
+                    <p>{{name_up}}</p>
+                </div>
+                <button class="menu__button">
+                    <img src="/img/Menu.png" alt="">
+                </button>
+            </div>
+            <div class="chat__message__content">
+                {{#if isContextMenu}}
+                    {{> PeopleChat }}
+                {{/if}}
+                <p class="chat__date">{{ChatDate}}</p>
+                {{#each messages}}
+                    {{> Message}}
+                {{/each}}
+            </div>
+            <form class="chat__message__footer" id="message">
+                <input name="message" id="message" class="input__message" placeholder="Сообщение" type="text">
+                {{> ButtonArrow direction="right" submit="submit"}}
+            </form>
+        {{/if}}
+    </div>
+</section>
