@@ -21,7 +21,8 @@
     "noUncheckedSideEffectImports": true,
 
     "noImplicitAny": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "strictNullChecks": true
   },
   "include": ["src"]
 }
