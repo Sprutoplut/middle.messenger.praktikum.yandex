@@ -1,6 +1,12 @@
+import Block from './core/block';
+
 export interface ValidationResult {
     error?: boolean;
     errorText?: string;
+}
+
+type Props = {
+  [key: string]: unknown;
 }
 
 export const validateField = (fieldName: string, value: string, formState?:
@@ -204,9 +210,9 @@ export const validateField = (fieldName: string, value: string, formState?:
 // Новая функция для обработки ввода
 export const handleInputValidation = (
   e: Event | null,
-  setProps: (props: any) => void,
-  labelError: any,
-  updateFormState: any,
+  setProps: (props: Props) => void,
+  labelError: unknown,
+  updateFormState: unknown,
   formState: Record<string, string>,
 ) => {
   let error: boolean | undefined;
@@ -229,10 +235,10 @@ export const handleInputValidation = (
   }
 
   setProps({ isError: error });
-  labelError.setProps({ text: errorText });
+  (labelError as Block).setProps({ text: errorText });
 
   if (e) {
-    updateFormState((e.target as HTMLInputElement).name, (e.target as HTMLInputElement).value);
+    if (typeof updateFormState === 'function') updateFormState((e.target as HTMLInputElement).name, (e.target as HTMLInputElement).value);
   }
 
   setProps({ inputErrors: error });

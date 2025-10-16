@@ -33,11 +33,15 @@ export default class Popup extends Block {
   }
 
   setButtonText(newText: string) {
-    this.children.Button.setProps({ text: newText });
+    if (this.children.Button instanceof Block) this.children.Button.setProps({ text: newText });
   }
 
   setLabelText(newText: string) {
-    this.children.LabelError.setProps({ text: newText });
+    if (this.children.LabelError instanceof Block) {
+      this.children.LabelError.setProps(
+        { text: newText },
+      );
+    }
   }
 
   public render(): string {

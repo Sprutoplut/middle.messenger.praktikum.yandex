@@ -10,8 +10,8 @@ type Method = typeof METHOD[keyof typeof METHOD];
 
 type Options = {
     method?: Method;
-    headers?: any;
-    data?: any;
+    headers?: Record<string, string>;
+    data?: unknown;
     timeout?: number;
     tries?: number;
 };
@@ -79,7 +79,7 @@ class HTTPTransport {
 
       xhr.open(
         method,
-        isGet && !!data ? `${url}${queryStringify(data)}` : url,
+        isGet && !!data ? `${url}${queryStringify(data as Record<string, string>)}` : url,
       );
 
       Object.keys(headers).forEach((key) => {
@@ -98,7 +98,18 @@ class HTTPTransport {
       if (isGet || !data) {
         xhr.send();
       } else {
-        xhr.send(data);
+        let body: XMLHttpRequestBodyInit | null = null;
+
+        if (data instanceof FormData) {
+          body = data;
+        } else if (typeof data === 'string') {
+          body = data;
+        } else {
+          body = JSON.stringify(data);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+        }
+
+        xhr.send(body);
       }
     });
   }

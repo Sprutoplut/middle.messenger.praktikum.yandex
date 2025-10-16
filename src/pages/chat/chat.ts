@@ -48,13 +48,13 @@ export default class ChatPage extends Block {
       PeopleChat: new PeopleChat({
         onClickAppend: () => {
           this.setProps({ isShow: true });
-          this.children.Popup.setButtonText('Добавить');
-          this.children.Popup.setProps({ formID: 'formPeopleAdd', title: 'Добавить пользователя' });
+          (this.children.Popup as Popup).setButtonText('Добавить');
+          if (this.children.Popup instanceof Block) this.children.Popup.setProps({ formID: 'formPeopleAdd', title: 'Добавить пользователя' });
         },
         onClickRemove: () => {
           this.setProps({ isShow: true });
-          this.children.Popup.setButtonText('Удалить');
-          this.children.Popup.setProps({ formID: 'formPeopleRemove', title: 'Удалить пользователя' });
+          (this.children.Popup as Popup).setButtonText('Удалить');
+          if (this.children.Popup instanceof Block) this.children.Popup.setProps({ formID: 'formPeopleRemove', title: 'Удалить пользователя' });
         },
       }),
       Popup: new Popup({
@@ -81,18 +81,20 @@ export default class ChatPage extends Block {
             const loginRegex = /^[a-zA-Z0-9_-]+$/;
             const digitsOnly = /^\d+$/;
             // Проверяем длину
-            if (value.length < 3 || value.length > 20) {
-              this.children.Popup.setProps({ textError: 'true' });
-              this.children.Popup.setLabelText('Логин должен содержать от 3 до 20 символов');
-            } else if (!loginRegex.test(value)) {
-              this.children.Popup.setProps({ textError: 'true' });
-              this.children.Popup.setLabelText('Логин содержит недопустимые символы');
-            } else if (digitsOnly.test(value)) {
-              this.children.Popup.setProps({ textError: 'true' });
-              this.children.Popup.setLabelText('Логин не может состоять только из цифр');
-            } else {
-              this.children.Popup.setProps({ textError: '' });
-              this.children.Popup.setLabelText('');
+            if (this.children.Popup instanceof Block) {
+              if (value.length < 3 || value.length > 20) {
+                this.children.Popup.setProps({ textError: 'true' });
+                (this.children.Popup as Popup).setLabelText('Логин должен содержать от 3 до 20 символов');
+              } else if (!loginRegex.test(value)) {
+                this.children.Popup.setProps({ textError: 'true' });
+                (this.children.Popup as Popup).setLabelText('Логин содержит недопустимые символы');
+              } else if (digitsOnly.test(value)) {
+                this.children.Popup.setProps({ textError: 'true' });
+                (this.children.Popup as Popup).setLabelText('Логин не может состоять только из цифр');
+              } else {
+                this.children.Popup.setProps({ textError: '' });
+                (this.children.Popup as Popup).setLabelText('');
+              }
             }
             this.updateFormState(
               (e.target as HTMLInputElement).name as keyof typeof this.props.formState,
@@ -105,15 +107,17 @@ export default class ChatPage extends Block {
           handleInputValidation(
             null, // передаем null для полной валидации
             this.setProps.bind(this),
-            this.children.Popup.children.LabelError,
+            (this.children.Popup as Block).children.LabelError,
             this.updateFormState.bind(this),
             this.props.formState as Record<string, string>,
           );
           if (!this.props.isError) {
-            if (this.children.Popup.props.title === 'Добавить пользователя') {
-              console.log('Добавление пользователя');
-            } else {
-              console.log('Удаление пользователя');
+            if (this.children.Popup instanceof Block) {
+              if (this.children.Popup.props.title === 'Добавить пользователя') {
+                console.log('Добавление пользователя');
+              } else {
+                console.log('Удаление пользователя');
+              }
             }
             console.log(this.props.formState);
             this.setProps({ isShow: false, isContextMenu: false });
