@@ -1,9 +1,9 @@
-export {LoginPage} from './login';
-export {RegisterPage} from './register';
-export {MenuPage} from './menu';
-export {ChatPage} from './chat';
-export {Error404Page} from './error404';
-export {Error500Page} from './error500';
-export {ProfilePage} from './profile';
-export {ProfileChangeDataPage} from './profileChangeData';
-export {ProfileChangePasswordPage} from './profileChangePassword';
+export { default as LoginPage } from './login';
+export { default as RegisterPage } from './register';
+export { default as MenuPage } from './menu';
+export { default as ChatPage } from './chat';
+export { default as Error404Page } from './error404';
+export { default as Error500Page } from './error500';
+export { default as ProfilePage } from './profile';
+export { default as ProfileChangeDataPage } from './profileChangeData';
+export { default as ProfileChangePasswordPage } from './profileChangePassword';

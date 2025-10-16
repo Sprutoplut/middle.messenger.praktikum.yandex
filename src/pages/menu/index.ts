@@ -1,1 +1,3 @@
-export {default as MenuPage} from './menu.hbs?raw';
+import MenuPage from './menu';
+
+export default MenuPage;

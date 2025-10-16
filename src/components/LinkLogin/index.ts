@@ -1,2 +1,4 @@
 import './linkLogin.less';
-export {default as LinkLogin} from './linkLogin.hbs?raw';
+import LinkLogin from './linkLogin';
+
+export default LinkLogin;

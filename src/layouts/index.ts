@@ -1,4 +1,4 @@
-export {MainLayout} from './main';
-export {LoginLayout} from './login';
-export {ProfileLayout} from './profile';
-export {ErrorLayout} from './error';
+export { default as MainLayout } from './main';
+export { default as LoginLayout } from './login';
+export { default as ProfileLayout } from './profile';
+export { default as ErrorLayout } from './error';

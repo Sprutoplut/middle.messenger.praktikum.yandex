@@ -1,1 +1,3 @@
-export {default as PopupProfile} from './popupProfile.hbs?raw';
+import PopupProfile from './popupProfile';
+
+export default PopupProfile;

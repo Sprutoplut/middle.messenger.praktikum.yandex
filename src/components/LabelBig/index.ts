@@ -1,2 +1,4 @@
 import './labelBig.less';
-export {default as LabelBig} from './labelBig.hbs?raw';
+import LabelBig from './labelBig';
+
+export default LabelBig;

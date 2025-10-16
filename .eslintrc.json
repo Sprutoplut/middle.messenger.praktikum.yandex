@@ -1,0 +1,40 @@
+{
+  "extends": [
+    "airbnb-base",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".hbs"]
+      }
+    }
+  },
+  "rules": {
+    "import/extensions": [
+      "error",
+      {
+        "js": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never",
+        "hbs": "ignorePackages",
+        "png": "ignorePackages"
+      }
+    ],
+    "import/no-unresolved": "off",
+    "class-methods-use-this": "off",
+    "import/no-absolute-path": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-console": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "no-shadow": "off",
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-param-reassign": "off"
+  }
+}
