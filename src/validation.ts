@@ -10,11 +10,7 @@ export const validateField = (fieldName: string, value: string, formState?:
   const hasUpperCase = /[A-Z]/;
   const hasDigit = /\d/;
   const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const parts = value.split('@');
-  const domainPart = parts[1];
   const domainRegex = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const domainParts = domainPart.split('.');
-  const lastPart = domainParts[domainParts.length - 1];
   const phoneRegex = /^\+?\d{10,15}$/;
   switch (fieldName) {
     case 'login':
@@ -79,14 +75,14 @@ export const validateField = (fieldName: string, value: string, formState?:
       break;
     case 'first_name':
       // Новая валидация для имени и фамилии
-      if (!/^[А-Яа-яA-Za-z]+(-[А-Яа-яA-Za-z]+)*$/.test(value)) {
+      if (!/^[А-ЯЁа-яёA-Za-z]+(-[А-ЯЁа-яёA-Za-z]+)*$/.test(value)) {
         return {
           error: true,
           errorText: 'Имя должно содержать только буквы и дефис',
         };
       }
 
-      if (!/^[А-ЯA-Z]/.test(value)) {
+      if (!/^[А-ЯЁA-Z]/.test(value)) {
         return {
           error: true,
           errorText: 'Первая буква имени должна быть заглавной',
@@ -109,14 +105,14 @@ export const validateField = (fieldName: string, value: string, formState?:
       break;
     case 'second_name':
       // Новая валидация для имени и фамилии
-      if (!/^[А-Яа-яA-Za-z]+(-[А-Яа-яA-Za-z]+)*$/.test(value)) {
+      if (!/^[А-ЯЁа-яёA-Za-z]+(-[А-ЯЁа-яёA-Za-z]+)*$/.test(value)) {
         return {
           error: true,
           errorText: 'Фамилия должна содержать только буквы и дефис',
         };
       }
 
-      if (!/^[А-ЯA-Z]/.test(value)) {
+      if (!/^[А-ЯЁA-Z]/.test(value)) {
         return {
           error: true,
           errorText: 'Первая буква фамилии должна быть заглавной',
@@ -149,14 +145,14 @@ export const validateField = (fieldName: string, value: string, formState?:
 
       // Проверяем наличие @ и корректной доменной части
 
-      if (parts.length !== 2) {
+      if (value.split('@').length !== 2) {
         return {
           error: true,
           errorText: 'Email должен содержать символ @',
         };
       }
 
-      if (!domainRegex.test(domainPart)) {
+      if (!domainRegex.test(value.split('@')[1])) {
         return {
           error: true,
           errorText: 'Некорректная доменная часть email',
@@ -165,7 +161,16 @@ export const validateField = (fieldName: string, value: string, formState?:
 
       // Проверяем наличие букв перед точкой в домене
 
-      if (!/^[a-zA-Z]{2,}$/.test(lastPart)) {
+      if (
+        // Проверяем, есть ли точка в доменной части
+        !value.split('@')[1].includes('.')
+        || !/^[a-zA-Z]{2,}$/.test(
+          value.split('@')[1] // Доменная часть после @
+            .split('.') // Разбиваем по точкам
+            .filter((part) => part.length > 0) // Убираем пустые части
+            .pop() ?? '', // Берём последнюю непустую часть
+        )
+      ) {
         return {
           error: true,
           errorText: 'После точки в домене должны быть буквы',
@@ -201,7 +206,7 @@ export const handleInputValidation = (
   e: Event | null,
   setProps: (props: any) => void,
   labelError: any,
-  updateFormState: (fieldName: string, value: string) => void,
+  updateFormState: any,
   formState: Record<string, string>,
 ) => {
   let error: boolean | undefined;

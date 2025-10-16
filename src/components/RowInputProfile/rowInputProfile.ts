@@ -9,7 +9,7 @@ type RowInputProfileProps = {
     type: string;
     autocomplete?: string;
     readonly?: boolean;
-    onBlur?: (e: any) => void;
+    onBlur?: (e: Event) => void;
 }
 
 export default class RowInputProfile extends Block {

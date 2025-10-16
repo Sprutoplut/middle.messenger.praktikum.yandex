@@ -36,10 +36,10 @@ export default class ProfileLayout extends Block {
         }),
         partial_block: new PopupProfile({
           onChange: (e) => {
-            this.setProps({ filesInput: e.target.files });
+            this.setProps({ filesInput: (e.target as HTMLInputElement).files });
 
-            if (this.props.filesInput && this.props.filesInput.length > 0) {
-              const file = this.props.filesInput[0];
+            if (this.props.filesInput && (this.props.filesInput as FileList).length > 0) {
+              const file = (this.props.filesInput as FileList)[0];
               this.children.Popup.setProps({
                 title: 'Файл загружен',
                 textError: '',
@@ -62,8 +62,12 @@ export default class ProfileLayout extends Block {
             this.children.Popup.setProps({ textError: 'Нужно выбрать файл' });
           } else {
             const avatarInput = document.querySelector('#profile-avatar') as HTMLInputElement;
-            if (avatarInput && this.props.filesInput && this.props.filesInput.length > 0) {
-              const file = this.props.filesInput[0];
+            if (
+              avatarInput
+              && this.props.filesInput
+              && (this.props.filesInput as FileList).length > 0
+            ) {
+              const file = (this.props.filesInput as FileList)[0];
 
               // Проверяем, что файл существует и имеет необходимые свойства
               if (file && file.name && file.type && file.lastModified) {

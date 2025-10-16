@@ -9,7 +9,11 @@
   "scripts": {
     "start": "vite build && vite preview",
     "build": "tsc && vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "eslint": "eslint .",
+    "eslintfix": "eslint . --fix",
+    "stylelint": "stylelint \"**/*.less\"",
+    "lint": "tsc --noEmit && npm run stylelint && npm run eslint"
   },
   "devDependencies": {
     "vite": "^7.1.9",

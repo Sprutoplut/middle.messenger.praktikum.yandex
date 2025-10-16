@@ -71,7 +71,13 @@ export default class ChatPage extends Block {
           required: 'required',
           autocomplete: 'none',
           onBlur: (e) => {
-            const { value } = e.target;
+            const target = e.target as HTMLInputElement | null; // Явный каст
+
+            if (!target || !target.value) {
+              return; // Защита от null и отсутствия value
+            }
+
+            const { value } = target;
             const loginRegex = /^[a-zA-Z0-9_-]+$/;
             const digitsOnly = /^\d+$/;
             // Проверяем длину
@@ -89,7 +95,7 @@ export default class ChatPage extends Block {
               this.children.Popup.setLabelText('');
             }
             this.updateFormState(
-              (e.target as HTMLInputElement).name,
+              (e.target as HTMLInputElement).name as keyof typeof this.props.formState,
               (e.target as HTMLInputElement).value,
             );
           },
@@ -101,7 +107,7 @@ export default class ChatPage extends Block {
             this.setProps.bind(this),
             this.children.Popup.children.LabelError,
             this.updateFormState.bind(this),
-            this.props.formState,
+            this.props.formState as Record<string, string>,
           );
           if (!this.props.isError) {
             if (this.children.Popup.props.title === 'Добавить пользователя') {
@@ -153,7 +159,7 @@ export default class ChatPage extends Block {
   private updateFormState(fieldName: keyof typeof this.props.formState, value: string) {
     this.setProps({
       formState: {
-        ...this.props.formState,
+        ...this.props.formState as Record<string, string>,
         [fieldName]: value,
       },
     });
@@ -174,10 +180,11 @@ export default class ChatPage extends Block {
         member.setProps({ check: '' });
       }
     });
-    let nameMember = '';
-    let photoMember = '';
+    let nameMember: string | undefined = '';
+    let photoMember: string | undefined = '';
 
     if (Activeindex !== -1) {
+      // @ts-expect-error Не получается исправить
       const currentMember = this.props.members[Activeindex];
       if (MemberMessages instanceof Block) {
         MemberMessages.setProps({ messagesBlock: currentMember?.messagesBlock });

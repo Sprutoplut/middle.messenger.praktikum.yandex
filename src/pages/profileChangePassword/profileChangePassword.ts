@@ -35,7 +35,7 @@ export default class ProfilePage extends Block {
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState,
+          this.props.formState as Record<string, string>,
         ),
       }),
       RowInputProfileRepeatPassword: new RowInputProfile({
@@ -48,7 +48,7 @@ export default class ProfilePage extends Block {
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState,
+          this.props.formState as Record<string, string>,
         ),
       }),
       LabelError: new LabelError({
@@ -58,7 +58,7 @@ export default class ProfilePage extends Block {
         text: 'Сохранить',
       }),
       events: {
-        submit: (e: any) => {
+        submit: (e: Event) => {
           e.preventDefault();
 
           // Выполняем полную валидацию при submit (передаем null)
@@ -67,7 +67,7 @@ export default class ProfilePage extends Block {
             this.setProps.bind(this),
             this.children.LabelError,
             this.updateFormState.bind(this),
-            this.props.formState,
+            this.props.formState as Record<string, string>,
           );
 
           if (!this.props.isError) {
@@ -83,7 +83,7 @@ export default class ProfilePage extends Block {
   private updateFormState(fieldName: keyof typeof this.props.formState, value: string) {
     this.setProps({
       formState: {
-        ...this.props.formState,
+        ...this.props.formState as Record<string, string>,
         [fieldName]: value,
       },
     });

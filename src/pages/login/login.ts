@@ -34,7 +34,7 @@ export default class LoginPage extends Block {
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState,
+          this.props.formState as Record<string, string>,
         ),
       }),
       InputPassword: new InputLogin({
@@ -48,14 +48,14 @@ export default class LoginPage extends Block {
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState,
+          this.props.formState as Record<string, string>,
         ),
       }),
       SignInButton: new Button({
         text: 'Авторизоваться',
       }),
       events: {
-        submit: (e: any) => {
+        submit: (e: Event) => {
           e.preventDefault();
 
           // Выполняем полную валидацию при submit (передаем null)
@@ -64,7 +64,7 @@ export default class LoginPage extends Block {
             this.setProps.bind(this),
             this.children.LabelError,
             this.updateFormState.bind(this),
-            this.props.formState,
+            this.props.formState as Record<string, string>,
           );
 
           if (!this.props.isError) {
@@ -81,7 +81,7 @@ export default class LoginPage extends Block {
   private updateFormState(fieldName: keyof typeof this.props.formState, value: string) {
     this.setProps({
       formState: {
-        ...this.props.formState,
+        ...this.props.formState as Record<string, string>,
         [fieldName]: value,
       },
     });
