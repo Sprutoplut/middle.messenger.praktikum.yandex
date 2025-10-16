@@ -29,7 +29,7 @@ export default class Block {
     return this.#id;
   }
 
-  // @ts-ignore
+  // @ts-expect-error
   #eventBus: EventBus;
 
   children: Children = {};
