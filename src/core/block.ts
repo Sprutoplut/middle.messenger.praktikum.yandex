@@ -5,7 +5,7 @@ import EventBus from './eventBus';
 type Props = {
   [key: string]: unknown;
 }
-type Children = Record<string, any>;
+type Children = Record<string, unknown>;
 
 interface Meta {
   tagName: string;
@@ -186,7 +186,7 @@ export default abstract class Block {
         propsAndStubs[key] = child.map(
           (component) => `<div data-id="${component.#id}"></div>`,
         );
-      } else {
+      } else if (child instanceof Block) {
         propsAndStubs[key] = `<div data-id="${child.#id}"></div>`;
       }
     });
@@ -204,7 +204,7 @@ export default abstract class Block {
 
           stub?.replaceWith(component.getContent());
         });
-      } else {
+      } else if (child instanceof Block) {
         const stub = fragment.content.querySelector(`[data-id="${child.#id}"]`);
 
         stub?.replaceWith(child.getContent());
@@ -237,12 +237,18 @@ export default abstract class Block {
   #makePropsProxy(props: Props) {
     const emitBind = this.#eventBus.emit.bind(this.#eventBus);
 
-    return new Proxy(props as any, {
+    return new Proxy(props as Props, {
       get(target, prop) {
+        if (typeof prop !== 'string') { // Защита от symbol
+          return undefined;
+        }
         const value = target[prop];
         return typeof value === 'function' ? value.bind(target) : value;
       },
       set(target, prop, value) {
+        if (typeof prop !== 'string') { // Защита от symbol
+          return false; // или throw new Error()
+        }
         const oldTarget = { ...target };
         target[prop] = value;
 

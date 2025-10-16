@@ -40,14 +40,20 @@ export default class ProfileLayout extends Block {
 
             if (this.props.filesInput && (this.props.filesInput as FileList).length > 0) {
               const file = (this.props.filesInput as FileList)[0];
-              this.children.Popup.setProps({
-                title: 'Файл загружен',
-                textError: '',
-              });
-              this.children.Popup.children.partial_block.setProps({
-                nameFile: file.name,
-              });
-            } else {
+              if (this.children.Popup instanceof Block) {
+                this.children.Popup.setProps({
+                  title: 'Файл загружен',
+                  textError: '',
+                });
+              }
+              if (this.children.Popup instanceof Block) {
+                if (this.children.Popup.children.partial_block instanceof Block) {
+                  this.children.Popup.children.partial_block.setProps({
+                    nameFile: file.name,
+                  });
+                }
+              }
+            } else if (this.children.Popup instanceof Block) {
               this.children.Popup.setProps({
                 title: 'Ошибка, попробуйте ещё раз',
                 red: 'red',
@@ -58,48 +64,52 @@ export default class ProfileLayout extends Block {
         }),
         onClick: (e) => {
           e.preventDefault();
-          if (this.children.Popup.children.partial_block.props.nameFile === undefined) {
-            this.children.Popup.setProps({ textError: 'Нужно выбрать файл' });
-          } else {
-            const avatarInput = document.querySelector('#profile-avatar') as HTMLInputElement;
-            if (
-              avatarInput
+          if (this.children.Popup instanceof Block) {
+            if (this.children.Popup.children.partial_block instanceof Block) {
+              if (this.children.Popup.children.partial_block.props.nameFile === undefined) {
+                this.children.Popup.setProps({ textError: 'Нужно выбрать файл' });
+              } else {
+                const avatarInput = document.querySelector('#profile-avatar') as HTMLInputElement;
+                if (
+                  avatarInput
               && this.props.filesInput
               && (this.props.filesInput as FileList).length > 0
-            ) {
-              const file = (this.props.filesInput as FileList)[0];
+                ) {
+                  const file = (this.props.filesInput as FileList)[0];
 
-              // Проверяем, что файл существует и имеет необходимые свойства
-              if (file && file.name && file.type && file.lastModified) {
-                // Создаем новый File объект
-                const newFile = new File([file], file.name, {
-                  type: file.type,
-                  lastModified: file.lastModified,
+                  // Проверяем, что файл существует и имеет необходимые свойства
+                  if (file && file.name && file.type && file.lastModified) {
+                    // Создаем новый File объект
+                    const newFile = new File([file], file.name, {
+                      type: file.type,
+                      lastModified: file.lastModified,
+                    });
+
+                    // Создаем новый FileList
+                    const fileList = new DataTransfer();
+                    fileList.items.add(newFile);
+
+                    // Устанавливаем новый FileList в целевой input
+                    avatarInput.files = fileList.files;
+                    console.log('Передали в скрытый input');
+                  } else {
+                    console.error('Неверный формат файла');
+                  }
+                } else {
+                  console.log('Передаем сразу на сервер файл');
+                  console.log(this.props.filesInput);
+                }
+                this.children.Popup.setProps({
+                  title: 'Загрузите файл',
+                  red: '',
+                  textError: '',
                 });
-
-                // Создаем новый FileList
-                const fileList = new DataTransfer();
-                fileList.items.add(newFile);
-
-                // Устанавливаем новый FileList в целевой input
-                avatarInput.files = fileList.files;
-                console.log('Передали в скрытый input');
-              } else {
-                console.error('Неверный формат файла');
+                this.children.Popup.children.partial_block.setProps({
+                  nameFile: '',
+                });
+                this.setProps({ isShow: false });
               }
-            } else {
-              console.log('Передаем сразу на сервер файл');
-              console.log(this.props.filesInput);
             }
-            this.children.Popup.setProps({
-              title: 'Загрузите файл',
-              red: '',
-              textError: '',
-            });
-            this.children.Popup.children.partial_block.setProps({
-              nameFile: '',
-            });
-            this.setProps({ isShow: false });
           }
         },
       }),
@@ -115,7 +125,11 @@ export default class ProfileLayout extends Block {
           this.setProps({ isShow: true });
           const popupFile = document.querySelector('#popup_file') as HTMLInputElement;
           popupFile.value = '';
-          this.children.Popup.children.partial_block.setProps({ nameFile: undefined });
+          if (this.children.Popup instanceof Block) {
+            if (this.children.Popup.children.partial_block instanceof Block) {
+              this.children.Popup.children.partial_block.setProps({ nameFile: undefined });
+            }
+          }
         },
       }),
       LinkProfileData: new LinkProfile({
