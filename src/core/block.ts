@@ -28,7 +28,8 @@ export default class Block {
   get id(): string {
     return this.#id;
   }
-  // @ts-ignore
+
+  // @ts-expect-error Не получается исправить
   #eventBus: EventBus;
 
   children: Children = {};

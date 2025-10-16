@@ -35,6 +35,8 @@
     "no-shadow": "off",
     "no-use-before-define": "off",
     "@typescript-eslint/no-unused-vars": "off",
-    "no-param-reassign": "off"
+    "no-param-reassign": "off",
+    "no-empty": "off",
+    "import/no-extraneous-dependencies": "off"
   }
 }
