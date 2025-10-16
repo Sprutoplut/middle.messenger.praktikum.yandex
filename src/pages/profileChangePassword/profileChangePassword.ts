@@ -58,7 +58,7 @@ export default class ProfilePage extends Block {
         text: 'Сохранить',
       }),
       events: {
-        submit: (e) => {
+        submit: (e: any) => {
           e.preventDefault();
 
           // Выполняем полную валидацию при submit (передаем null)

@@ -5,7 +5,9 @@ type InputProps = {
     type: string;
     autocomplete?: string;
     value?: string | null;
-    onBlur?: () => void;
+    events?: {
+      blur?: (e: Event) => void;
+    };
 };
 
 export default class Input extends Block {

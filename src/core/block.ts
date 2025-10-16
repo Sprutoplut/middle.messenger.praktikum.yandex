@@ -3,7 +3,7 @@ import Handlebars from 'handlebars';
 import EventBus from './eventBus';
 
 type Props = Record<string, any>;
-type Children = Record<string, Block | Block[]>;
+type Children = Record<string, any>;
 
 interface Meta {
   tagName: string;
@@ -25,6 +25,9 @@ export default class Block {
 
   #id: string = nanoid(6);
 
+  get id(): string {
+    return this.#id;
+  }
   // @ts-ignore
   #eventBus: EventBus;
 
@@ -115,7 +118,11 @@ export default class Block {
     this.componentDidMount();
   }
 
-  componentDidMount(oldProps?: Props) {}
+  componentDidMount(oldProps?: Props) {
+    if (oldProps) {
+
+    }
+  }
 
   dispatchComponentDidMount() {
     this.#eventBus().emit(Block.EVENTS.FLOW_CDM);
@@ -130,6 +137,9 @@ export default class Block {
   }
 
   componentDidUpdate(oldProps: Props, newProps: Props) {
+    if (oldProps.someValue !== newProps.someValue) {
+
+    }
     return true;
   }
 

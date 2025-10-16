@@ -55,7 +55,7 @@ export default class LoginPage extends Block {
         text: 'Авторизоваться',
       }),
       events: {
-        submit: (e) => {
+        submit: (e: any) => {
           e.preventDefault();
 
           // Выполняем полную валидацию при submit (передаем null)

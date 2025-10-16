@@ -163,7 +163,7 @@ export default class ChatPage extends Block {
     const { Activeindex } = this.props;
     const { membersComp, MemberMessages } = this.children;
 
-    membersComp.forEach((member: Block, index: number) => {
+    (membersComp as Block[]).forEach((member: Block, index: number) => {
       if (index === Activeindex) {
         member.setProps({ check: 'check' });
         member.setProps({ className: 'chat__list__member list__member__check' });
@@ -179,7 +179,9 @@ export default class ChatPage extends Block {
 
     if (Activeindex !== -1) {
       const currentMember = this.props.members[Activeindex];
-      MemberMessages.setProps({ messagesBlock: currentMember?.messagesBlock });
+      if (MemberMessages instanceof Block) {
+        MemberMessages.setProps({ messagesBlock: currentMember?.messagesBlock });
+      }
       nameMember = currentMember?.MemberName;
       photoMember = currentMember?.MemberPhoto;
     }

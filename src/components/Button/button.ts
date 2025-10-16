@@ -3,7 +3,7 @@ import Block from '../../core/block';
 type ButtonProps = {
     buttonID?: string;
     text?: string;
-    onClick?: () => void;
+    onClick?: (e: any) => void;
 }
 
 export default class Button extends Block {
