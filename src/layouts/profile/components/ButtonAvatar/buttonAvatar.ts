@@ -1,7 +1,7 @@
 import Block from '../../../../core/block';
 
 type ButtonAvatarProps = {
-    onClick?: (e: any) => void;
+    onClick?: (e: Event) => void;
 }
 
 export default class ButtonAvatar extends Block {

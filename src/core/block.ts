@@ -2,7 +2,9 @@ import { nanoid } from 'nanoid';
 import Handlebars from 'handlebars';
 import EventBus from './eventBus';
 
-type Props = Record<string, any>;
+type Props = {
+  [key: string]: unknown;
+}
 type Children = Record<string, any>;
 
 interface Meta {
@@ -10,8 +12,7 @@ interface Meta {
   props: Props;
 }
 
-// Нельзя создавать экземпляр данного класса
-export default class Block {
+export default abstract class Block {
   static EVENTS = {
     INIT: 'init',
     FLOW_CDM: 'flow:component-did-mount',
@@ -76,7 +77,7 @@ export default class Block {
         if (this.#element !== null) this.#element.classList.add(...classes);
       }
 
-      if (typeof props.attrs === 'object') {
+      if (typeof props.attrs === 'object' && props.attrs !== null) {
         Object.entries(props.attrs).forEach(([attrName, attrValue]) => {
           if (this.#element !== null) this.#element.setAttribute(attrName, String(attrValue));
         });
@@ -159,17 +160,22 @@ export default class Block {
   #addEvents() {
     const { events = {} } = this.props;
 
-    Object.keys(events).forEach((eventName) => {
-      this.#element?.addEventListener(eventName, events[eventName]);
-    });
+    if (events && typeof events === 'object' && !Array.isArray(events)) {
+      Object.keys(events).forEach((eventName) => {
+        if (eventName in events) {
+          this.#element?.addEventListener(eventName, events[eventName as keyof typeof events]);
+        }
+      });
+    }
   }
 
   #removeEvents() {
     const { events = {} } = this.props;
-
-    Object.keys(events).forEach((eventName) => {
-      this.#element?.removeEventListener(eventName, events[eventName]);
-    });
+    if (events && typeof events === 'object' && !Array.isArray(events)) {
+      Object.keys(events).forEach((eventName) => {
+        this.#element?.removeEventListener(eventName, events[eventName as keyof typeof events]);
+      });
+    }
   }
 
   #compile() {

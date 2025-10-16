@@ -6,9 +6,13 @@
 
 /// Новые команды
 
-npx stylelint "**/*.less" - проверка всех .less файлов
+npm run stylelint - проверка всех .less файлов
 
-npx eslint . - проверка всех .ts файлов
+npm run lint - проверка всех .less и .ts файлов
+
+npm run eslint - проверка всех .ts файлов
+
+npm run eslintfix - проверка всех .ts файлов и исправление ошибок
 
 /// Новые функции
 

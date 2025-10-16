@@ -3,7 +3,7 @@ import InputFile from '../InputFile';
 
 type PopupProfileProps = {
     nameFile?: string;
-    onChange?: (e: any) => void;
+    onChange?: (e: Event) => void;
 }
 
 export default class PopupProfile extends Block {

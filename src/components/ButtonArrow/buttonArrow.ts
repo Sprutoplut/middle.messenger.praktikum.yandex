@@ -3,7 +3,7 @@ import Block from '../../core/block';
 type ButtonArrowProps = {
     direction?: string;
     submit?: string;
-    onClick?: (e: any) => void;
+    onClick?: (e: Event) => void;
 }
 
 export default class ButtonArrow extends Block {

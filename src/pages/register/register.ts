@@ -38,7 +38,7 @@ export default class LoginPage extends Block {
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState,
+          this.props.formState as Record<string, string>,
         ),
       }),
       InputLogin: new InputLogin({
@@ -52,7 +52,7 @@ export default class LoginPage extends Block {
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState,
+          this.props.formState as Record<string, string>,
         ),
       }),
       InputFirstName: new InputLogin({
@@ -66,7 +66,7 @@ export default class LoginPage extends Block {
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState,
+          this.props.formState as Record<string, string>,
         ),
       }),
       InputSecondName: new InputLogin({
@@ -80,7 +80,7 @@ export default class LoginPage extends Block {
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState,
+          this.props.formState as Record<string, string>,
         ),
       }),
       InputPhone: new InputLogin({
@@ -94,7 +94,7 @@ export default class LoginPage extends Block {
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState,
+          this.props.formState as Record<string, string>,
         ),
       }),
       InputPassword: new InputLogin({
@@ -108,7 +108,7 @@ export default class LoginPage extends Block {
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState,
+          this.props.formState as Record<string, string>,
         ),
       }),
       InputPasswordRepeat: new InputLogin({
@@ -122,14 +122,14 @@ export default class LoginPage extends Block {
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState,
+          this.props.formState as Record<string, string>,
         ),
       }),
       RegisterButton: new Button({
         text: 'Зарегистрироваться',
       }),
       events: {
-        submit: (e: any) => {
+        submit: (e: Event) => {
           e.preventDefault();
 
           // Выполняем полную валидацию при submit (передаем null)
@@ -138,7 +138,7 @@ export default class LoginPage extends Block {
             this.setProps.bind(this),
             this.children.LabelError,
             this.updateFormState.bind(this),
-            this.props.formState,
+            this.props.formState as Record<string, string>,
           );
 
           if (!this.props.isError) {
@@ -154,7 +154,7 @@ export default class LoginPage extends Block {
   private updateFormState(fieldName: keyof typeof this.props.formState, value: string) {
     this.setProps({
       formState: {
-        ...this.props.formState,
+        ...this.props.formState as Record<string, string>,
         [fieldName]: value,
       },
     });

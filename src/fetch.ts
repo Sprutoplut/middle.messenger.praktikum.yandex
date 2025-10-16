@@ -19,8 +19,6 @@ type Options = {
 // Тип Omit принимает два аргумента: первый — тип, второй — строка
 // и удаляет из первого типа ключ, переданный вторым аргументом
 type OptionsWithoutMethod = Omit<Options, 'method'>;
-// Этот тип эквивалентен следующему:
-// type OptionsWithoutMethod = { data?: any };
 
 function queryStringify(data: Record<string, string>) {
   if (typeof data !== 'object') {
@@ -29,7 +27,10 @@ function queryStringify(data: Record<string, string>) {
 
   // Здесь достаточно и [object Object] для объекта
   const keys = Object.keys(data);
-  return keys.reduce((result, key, index) => `${result}${key}=${data[key]}${index < keys.length - 1 ? '&' : ''}`, '?');
+  return keys.reduce(
+    (result, key, index) => `${result}${encodeURIComponent(key)}=${encodeURIComponent(data[key])}${index < keys.length - 1 ? '&' : ''}`,
+    '?',
+  );
 }
 
 function fetchWithRetry(url: string, options: Options = {}): Promise<Response> {

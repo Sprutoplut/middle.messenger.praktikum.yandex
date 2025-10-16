@@ -8,7 +8,7 @@ type InputLoginProps =
     type: string;
     autocomplete?: string;
     required?: string;
-    onBlur?: (e: any) => void;
+    onBlur?: (e: Event) => void;
 }
 
 export default class InputLogin extends Block {
