@@ -1,65 +1,116 @@
-import Handlebars from "handlebars";
+import Handlebars from 'handlebars';
 import * as Components from './components';
 import * as Pages from './pages';
 import * as Layouts from './layouts';
-import ImgPeople from './assets/img/PhotoPeople.png';
+import members from './pages/chat/members';
 
-const pages = {
-    'login': [Pages.LoginPage,Layouts.LoginLayout,{textLink: "Нет аккаунта ?", textError: "Неверный пароль" , isError: "true", id_form: "login",nameForm: "Вход"}],
-    'register': [Pages.RegisterPage,Layouts.LoginLayout,{id_form: "register", textLink: "Войти",nameForm: "Регистрация"}],
-    'menu': [Pages.MenuPage,Layouts.MainLayout],
-    'chat': [Pages.ChatPage,Layouts.MainLayout,{isShowRemove: false, isContextMenu: true, name_up: "Вадим", photo_up: ImgPeople,
-        members: [
-            {MemberPhoto: ImgPeople, LastMessageWho: "Вы", MemberName: "Андрей", LastMessageDate: "10:49", LastMessage: "Друзья, у меня для вас особенный выпуск новостей! Друзья, у меня для вас особенный выпуск новостей!", CountNoReadMessage: 2},
-            {MemberPhoto: ImgPeople, LastMessageWho: "Вы", MemberName: "Андрей", LastMessageDate: "10:49", LastMessage: "Друзья, у меня для вас особенный выпуск новостей! Друзья, у меня для вас особенный выпуск новостей!", CountNoReadMessage: 0},
-            {MemberPhoto: ImgPeople, MemberName: "Андрей", LastMessageDate: "10:49", LastMessage: "Друзья, у меня для вас особенный выпуск новостей! Друзья, у меня для вас особенный выпуск новостей!", CountNoReadMessage: 4},
-            {MemberPhoto: ImgPeople, MemberName: "Андрей", LastMessageDate: "10:49", LastMessage: "Друзья, у меня для вас особенный выпуск новостей! Друзья, у меня для вас особенный выпуск новостей!", CountNoReadMessage: 0},
-            {MemberPhoto: ImgPeople, MemberName: "Андрей", LastMessageDate: "10:49", LastMessage: "Друзья, у меня для вас особенный выпуск новостей! Друзья, у меня для вас особенный выпуск новостей!", CountNoReadMessage: 0},
-            {MemberPhoto: ImgPeople, MemberName: "Андрей", LastMessageDate: "10:49", LastMessage: "Друзья, у меня для вас особенный выпуск новостей! Друзья, у меня для вас особенный выпуск новостей!", CountNoReadMessage: 0},
-            {MemberPhoto: ImgPeople, MemberName: "Андрей", LastMessageDate: "10:49", LastMessage: "Друзья, у меня для вас особенный выпуск новостей! Друзья, у меня для вас особенный выпуск новостей!", CountNoReadMessage: 0},
-            {MemberPhoto: ImgPeople, MemberName: "Андрей", LastMessageDate: "10:49", LastMessage: "Друзья, у меня для вас особенный выпуск новостей! Друзья, у меня для вас особенный выпуск новостей!", CountNoReadMessage: 0},
-            {MemberPhoto: ImgPeople, MemberName: "Андрей", LastMessageDate: "10:49", LastMessage: "Друзья, у меня для вас особенный выпуск новостей! Друзья, у меня для вас особенный выпуск новостей!", CountNoReadMessage: 0},
-            
-        ],
-        ChatDate: "19 июня",
-        messages: [
-            {author: "author", message: "Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой.\nХассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно продали на аукционе за 45000 евро.", time: "11:56"},
-            {message: "Привет! Смотри, тут всплыл интересный кусок лунной космической истории — НАСА в какой-то момент попросила Хассельблад адаптировать модель SWC для полетов на Луну. Сейчас мы все знаем что астронавты летали с моделью 500 EL — и к слову говоря, все тушки этих камер все еще находятся на поверхности Луны, так как астронавты с собой забрали только кассеты с пленкой.\nХассельблад в итоге адаптировал SWC для космоса, но что-то пошло не так и на ракету они так никогда и не попали. Всего их было произведено 25 штук, одну из них недавно продали на аукционе за 45000 евро.", time: "11:56"},
-        ]
-    }],
-    'error404': [Pages.Error404Page,Layouts.ErrorLayout],
-    'error500': [Pages.Error500Page,Layouts.ErrorLayout],
-    'profile': [Pages.ProfilePage,Layouts.ProfileLayout, {name: "Иван",isShow: false,isFile: true,isErrorFile: true,isError: false}],
-    'profileChangeData': [Pages.ProfileChangeDataPage,Layouts.ProfileLayout,{change: "true"}],
-    'profileChangePassword': [Pages.ProfileChangePasswordPage,Layouts.ProfileLayout,{change: "true"}]
+import renderDOM from './core/renderDom';
+import type Block from './core/block';
+
+// Основной интерфейс страницы
+interface PageEntry {
+  layout: Block;
+}
+
+const pages: Record<string, PageEntry> = {
+  login: {
+    layout: new Layouts.LoginLayout({ body: new Pages.LoginPage({}), nameForm: 'Вход', textLink: 'Нет аккаунта ?' }),
+  },
+  register: {
+    layout: new Layouts.LoginLayout({ body: new Pages.RegisterPage({}), nameForm: 'Регистрация', textLink: 'Войти' }),
+  },
+  menu: {
+    layout: new Layouts.MainLayout({ body: new Pages.MenuPage() }),
+  },
+  chat: {
+    layout: new Layouts.MainLayout({ body: new Pages.ChatPage({ members }) }),
+  },
+  error404: {
+    layout: new Layouts.ErrorLayout({ body: new Pages.Error404Page(), textLink: 'Назад к чатам' }),
+  },
+  error500: {
+    layout: new Layouts.ErrorLayout({ body: new Pages.Error500Page(), textLink: 'Назад к чатам' }),
+  },
+  profile: {
+    layout: new Layouts.ProfileLayout({
+      body: new Pages.ProfilePage({
+        value: ['pochta@yandex.ru', 'ivanivanov', 'Иван', 'Иванов', 'Иван', '+7 (909) 967 30 30'],
+      }),
+      change: false,
+      name: 'Иван',
+    }),
+  },
+  profileChangeData: {
+    layout: new Layouts.ProfileLayout({
+      body: new Pages.ProfileChangeDataPage({
+        value: ['pochta@yandex.ru', 'ivanivanov', 'Иван', 'Иванов', 'Иван', '+7 (909) 967 30 30'],
+      }),
+      change: true,
+    }),
+  },
+  profileChangePassword: {
+    layout: new Layouts.ProfileLayout({
+      body: new Pages.ProfileChangePasswordPage({
+        oldPassword: 'dsadasfasdsa',
+      }),
+      change: true,
+    }),
+  },
 };
-Object.entries(Components).forEach(
-    ([name, template]) => {
-        Handlebars.registerPartial(name, template);
-    }
-);
+Object.entries(Components).forEach(([name, template]) => {
+  if (typeof template === 'function') {
+    return;
+  }
+  Handlebars.registerPartial(name, template);
+});
 
 function navigation(page: string) {
-    //@ts-ignore
-    const [source, layout, context ]= pages[page];
-    const container = document.getElementById('app')!;
-    const templatingFunction = Handlebars.compile(source);
-    const layoutFunction = Handlebars.compile(layout)
-    if (layout == Layouts.LoginLayout) container.innerHTML = layoutFunction({body: templatingFunction(context),textLink: context.textLink,id_form: context.id_form,nameForm: context.nameForm});
-    if (layout == Layouts.ErrorLayout || layout == Layouts.MainLayout) container.innerHTML = layoutFunction({body: templatingFunction(context)});
-    if (layout == Layouts.ProfileLayout) container.innerHTML = layoutFunction({body: templatingFunction(context), change: context.change, name: context.name, isShow: context.isShow,isFile: context.isFile,isErrorFile: context.isErrorFile,isError: context.isError});
+  const pageEntry = pages[page];
+  const container = document.getElementById('app');
+
+  if (!container) {
+    console.error('Контейнер #app не найден в DOM');
+    return;
+  }
+  renderDOM(pageEntry.layout);
 }
 
 document.addEventListener('DOMContentLoaded', () => navigation('menu'));
 
-document.addEventListener('click', e => {
-    //@ts-ignore
-    const page = e.target.getAttribute('page');
-    if (page)
-    {
-        navigation(page);
+document.addEventListener('click', (e) => {
+  const target = e.target as HTMLElement | null;
+  if (target && target.getAttribute('page')) {
+    const page = target.getAttribute('page');
+    if (page) {
+      navigation(page);
 
-        e.preventDefault();
-        e.stopImmediatePropagation();
+      e.preventDefault();
+      e.stopImmediatePropagation();
     }
-})
+  }
+});
+
+renderDOM(new Layouts.LoginLayout({
+  body: new Pages.LoginPage({}),
+  textLink: 'Нет аккаунта ?',
+  nameForm: 'Вход',
+}));
+
+/* renderDOM(new Layouts.LoginLayout({
+  body: new Pages.RegisterPage({}),
+  textLink: "Войти",
+  nameForm: "Регистрация",
+})); */
+
+/* renderDOM(new Layouts.ProfileLayout({
+  body: new Pages.ProfileChangePasswordPage({
+    oldPassword: "dsadasdas",
+  }),
+  change: true,
+})); */
+
+/* renderDOM(new Layouts.MainLayout({
+  body: new Pages.ChatPage({
+    members: members,
+  }),
+})); */

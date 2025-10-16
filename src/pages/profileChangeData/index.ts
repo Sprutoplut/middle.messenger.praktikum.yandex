@@ -1,1 +1,3 @@
-export {default as ProfileChangeDataPage} from './profileChangeData.hbs?raw';
+import ProfileChangeDataPage from './profileChangeData';
+
+export default ProfileChangeDataPage;

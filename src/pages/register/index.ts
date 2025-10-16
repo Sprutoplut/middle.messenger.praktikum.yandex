@@ -1,1 +1,3 @@
-export {default as RegisterPage} from './register.hbs?raw';
+import RegisterPage from './register';
+
+export default RegisterPage;

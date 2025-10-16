@@ -1,2 +1,4 @@
 import './buttonAppend.less';
-export {default as ButtonAppend} from './buttonAppend.hbs?raw';
+import ButtonAppend from './buttonAppend';
+
+export default ButtonAppend;

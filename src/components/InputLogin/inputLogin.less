@@ -2,23 +2,28 @@
 
 .input__box {
     .flex-column(start,start);
+
     position: relative;
+
     input {
         width: 280px;
-        padding: 7px 0px;
+        padding: 7px 0;
         border: none;
         border-bottom: solid 1px @primary-color;
+
         &:focus 
         {
             border: none;
             outline: none;
             border-bottom: solid 1px @primary-color;
         }
+
         &::placeholder
         {
             .font(13px,@text-color-second)
         }
     }
+
     label {
         opacity: 0;
         transform: translateY(-100%);
@@ -28,6 +33,7 @@
         margin-bottom: -20px;
         .font(9px,@text-color-second)
     }
+
     input:focus + label,
     input:not(:placeholder-shown) + label {
         transform: translateY(-100%);
