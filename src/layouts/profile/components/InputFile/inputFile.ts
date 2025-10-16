@@ -3,7 +3,7 @@ import Input from './input';
 
 type InputFileProps =
 {
-    onChange?: () => void;
+    onChange?: (e: any) => void;
 }
 
 export default class InputFile extends Block {

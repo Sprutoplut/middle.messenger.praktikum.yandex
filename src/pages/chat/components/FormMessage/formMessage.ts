@@ -3,8 +3,8 @@ import Block from '../../../../core/block';
 import InputMessage from './inputMessage';
 
 type FormProps = {
-    onBlur?: () => void;
-    onSubmit?: () => void;
+    onBlur?: (e: any) => void;
+    onSubmit?: (e: any) => void;
 };
 
 export default class FormMessage extends Block {

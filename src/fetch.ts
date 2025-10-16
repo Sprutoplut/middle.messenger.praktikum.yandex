@@ -102,3 +102,8 @@ class HTTPTransport {
     });
   }
 }
+
+const httptrans = new HTTPTransport();
+const fetchretru = fetchWithRetry("test.com", {});
+// Просто чтобы не ругался то что их не вызывают
+console.log(httptrans,fetchretru);

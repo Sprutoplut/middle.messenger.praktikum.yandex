@@ -11,8 +11,8 @@ type PopupProps = {
     buttonText?: string;
     buttonID?: string;
     LabelError?: Block;
-    onClick?: () => void;
-    onClickPopup?: () => void;
+    onClick?: (e: any) => void;
+    onClickPopup?: (e: any) => void;
 }
 
 export default class Popup extends Block {

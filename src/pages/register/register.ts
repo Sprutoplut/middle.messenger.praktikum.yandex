@@ -129,7 +129,7 @@ export default class LoginPage extends Block {
         text: 'Зарегистрироваться',
       }),
       events: {
-        submit: (e) => {
+        submit: (e: any) => {
           e.preventDefault();
 
           // Выполняем полную валидацию при submit (передаем null)

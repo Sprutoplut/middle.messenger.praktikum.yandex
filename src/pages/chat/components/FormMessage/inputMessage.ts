@@ -1,7 +1,7 @@
 import Block from '../../../../core/block';
 
 type InputProps = {
-    onBlur?: () => void;
+    onBlur?: (e: any) => void;
 };
 
 export default class InputMessage extends Block {

@@ -2,11 +2,11 @@ import Handlebars from 'handlebars';
 import type { HelperOptions } from 'handlebars';
 import Block from './block';
 
-interface BlockConstructable<P = PropsBlock> {
+interface BlockConstructable<P = Record<string, any>> {
   new (props: P): Block;
 }
 
-export default function registerComponent<Props extends PropsBlock>(
+export default function registerComponent<Props extends Record<string, any>>(
   Component: BlockConstructable<Props>,
 ) {
   Handlebars.registerHelper(
@@ -32,7 +32,7 @@ export default function registerComponent<Props extends PropsBlock>(
       (Object.keys(hash) as any).forEach((key: keyof Props) => {
         if (this[key] && typeof this[key] === 'string') {
           hash[key] = hash[key].replace(
-            new RegExp(`{{${key}}}`, 'i'),
+            new RegExp(`{{${String(key)}}}`, 'i'),
             this[key],
           );
         }
