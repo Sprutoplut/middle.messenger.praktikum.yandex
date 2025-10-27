@@ -1,2 +1,4 @@
 import './linkProfile.less';
-export {default as LinkProfile} from './linkProfile.hbs?raw';
+import LinkProfile from './linkProfile';
+
+export default LinkProfile;

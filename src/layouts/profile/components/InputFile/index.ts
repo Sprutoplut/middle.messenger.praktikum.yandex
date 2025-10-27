@@ -1,2 +1,4 @@
 import './inputFile.less';
-export {default as InputFile} from './inputFile.hbs?raw';
+import InputFile from './inputFile';
+
+export default InputFile;

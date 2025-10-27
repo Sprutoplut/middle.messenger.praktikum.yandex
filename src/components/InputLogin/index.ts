@@ -1,2 +1,4 @@
 import './inputLogin.less';
-export {default as InputLogin} from './inputLogin.hbs?raw';
+import InputLogin from './inputLogin';
+
+export default InputLogin;
