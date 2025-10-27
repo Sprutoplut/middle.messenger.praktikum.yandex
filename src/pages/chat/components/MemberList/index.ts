@@ -1,2 +1,4 @@
 import './memberList.less';
-export {default as MemberList} from './memberList.hbs?raw';
+import MemberList from './memberList';
+
+export default MemberList;

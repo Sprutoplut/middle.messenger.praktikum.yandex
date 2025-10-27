@@ -1,1 +1,3 @@
-export {default as Error404Page} from './error404.hbs?raw';
+import Error404Page from './error404';
+
+export default Error404Page;

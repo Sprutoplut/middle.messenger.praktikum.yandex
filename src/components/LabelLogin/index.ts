@@ -1,2 +1,4 @@
 import './labelLogin.less';
-export {default as LabelLogin} from './labelLogin.hbs?raw';
+import LabelLogin from './labelLogin';
+
+export default LabelLogin;

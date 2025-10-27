@@ -1,2 +1,4 @@
 import './buttonArrow.less';
-export {default as ButtonArrow} from './buttonArrow.hbs?raw';
+import ButtonArrow from './buttonArrow';
+
+export default ButtonArrow;

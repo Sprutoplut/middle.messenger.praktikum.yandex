@@ -1,2 +1,4 @@
 import './login.less';
-export {default as LoginLayout} from './login.hbs?raw';
+import LoginLayout from './login';
+
+export default LoginLayout;

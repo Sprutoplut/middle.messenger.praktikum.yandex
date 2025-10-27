@@ -1,1 +1,3 @@
-export {default as RowLabelProfile} from './rowLabelProfile.hbs?raw';
+import RowLabelProfile from './rowLabelProfile';
+
+export default RowLabelProfile;
