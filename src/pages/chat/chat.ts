@@ -214,13 +214,15 @@ class ChatPage extends Block {
 
   render() {
     const { Activeindex } = this.props;
-    const { membersComp, MemberMessages } = this.children;
+    
     
     if (this.props.members !== undefined)
     {
     this.children.membersComp = this.props.members.map(
         (props2) => new MemberList({
           ...props2,
+          //className: props2.id === Activeindex ? 'chat__list__member list__member__check' : 'chat__list__member',
+          //check: props2.id === Activeindex ? 'check' : '',
           onClick: () => {
             this.setProps({
               Activeindex: props2.id,
@@ -229,17 +231,15 @@ class ChatPage extends Block {
         }),
       );
     }
+    const { membersComp, MemberMessages } = this.children;
     if (membersComp !== undefined)
     {
-      (membersComp as Block[]).forEach((member: Block) => {
-        if (member.id === Activeindex) {
-          member.setProps({ check: 'check' });
-          member.setProps({ className: 'chat__list__member list__member__check' });
-          return;
+      (membersComp as MemberList[]).forEach((member: MemberList) => {
+        if (member.props.id === Activeindex) {
+          member.setProps({check: 'check', className: 'chat__list__member list__member__check'});
         }
-
-        if (member.props.check === 'check') {
-          member.setProps({ check: '' });
+        else{
+          member.setProps({check: '', className: 'chat__list__member'});
         }
       });
     }
@@ -249,12 +249,21 @@ class ChatPage extends Block {
     
     if (Activeindex !== -1) {
       // @ts-expect-error Не получается исправить
-      const currentMember = this.props.members[Activeindex];
+      let currentMember = this.props.members[0];
+      if (membersComp !== undefined)
+      {
+        (membersComp as MemberList[]).forEach((member: MemberList) => {
+          if (member.props.id === Activeindex) {
+            currentMember = member;
+            return;
+          }
+        });
+      }
       /*if (MemberMessages instanceof Block) {
         MemberMessages.setProps({ messagesBlock: currentMember?.messagesBlock });
       }*/
-      nameMember = currentMember?.MemberName;
-      photoMember = currentMember?.MemberPhoto;
+      nameMember = currentMember?.props.MemberName;
+      photoMember = currentMember?.props.MemberPhoto;
     }
     
     return `
@@ -313,7 +322,7 @@ class ChatPage extends Block {
 const mapStateToProps = (state) => {
   return {
     members: state.members,
-    Activeindex: state.Activeindex,
+    //Activeindex: state.Activeindex,
   };
 };
 

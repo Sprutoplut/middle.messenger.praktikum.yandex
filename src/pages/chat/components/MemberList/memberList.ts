@@ -12,7 +12,6 @@ export default class MemberList extends Block {
       },
     });
   }
-
   public render(): string {
     return `
         <div class="chat__list__member list__member__{{check}}">
