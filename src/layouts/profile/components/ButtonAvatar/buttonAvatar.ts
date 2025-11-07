@@ -1,10 +1,12 @@
 import Block from '../../../../core/block';
+import { connect } from '../../../../utils/connect';
 
 type ButtonAvatarProps = {
     onClick?: (e: Event) => void;
+    pathAvatar?: string;
 }
 
-export default class ButtonAvatar extends Block {
+class ButtonAvatar extends Block {
   constructor(props: ButtonAvatarProps) {
     super('button', {
       ...props,
@@ -18,8 +20,17 @@ export default class ButtonAvatar extends Block {
   public render(): string {
     return `
             <div class="place__avatar">
+            <img src="{{pathAvatar}}">
                 <p>Поменять<br>аватар</p>
             </div>
         `;
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    pathAvatar: state.pathAvatar,
+  };
+};
+
+export default connect(mapStateToProps)(ButtonAvatar);

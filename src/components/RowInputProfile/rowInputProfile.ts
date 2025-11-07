@@ -1,18 +1,19 @@
+import { UserDTO } from '../../api/type';
 import Block from '../../core/block';
+import { connect } from '../../utils/connect';
 import Input from './input';
-import InputRead from './inputRead';
 
 type RowInputProfileProps = {
     name: string;
-    nameValue: string;
-    value?: string;
+    nameValue: keyof UserDTO;
+    user: UserDTO;     // Теперь получаем user целиком
     type: string;
     autocomplete?: string;
-    readonly?: boolean;
+    empty?: boolean;
     onBlur?: (e: Event) => void;
 }
 
-export default class RowInputProfile extends Block {
+class RowInputProfile extends Block {
   constructor(props: RowInputProfileProps) {
     super('div', {
       ...props,
@@ -21,27 +22,32 @@ export default class RowInputProfile extends Block {
         name: props.nameValue,
         type: props.type,
         autocomplete: props.autocomplete,
-        value: props.value,
+        value: props.user[props.nameValue],
         events: {
-          blur: props.onBlur,
-        },
-      }),
-      InputRead: new InputRead({
-        name: props.nameValue,
-        type: props.type,
-        value: props.value,
-      }),
+          blur: props.onBlur
+        }
+      })
     });
+  }
+
+  componentDidUpdate(){
+    this.children.Input.setValue(this.props.user[this.props.nameValue]);
   }
 
   public render(): string {
     return `
-            <p class="profile__name">{{name}}</p>
-            {{#if readonly}}
-                {{{InputRead}}}
-            {{else}}
-                {{{Input}}}
-            {{/if}}
-        `;
+      <p class="profile__name">{{name}}</p>
+      {{{Input}}}
+    `;
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(RowInputProfile);
+
+

@@ -1,16 +1,19 @@
+import { UserDTO } from '../../api/type';
 import Block from '../../core/block';
+import { connect } from '../../utils/connect';
 
 type InputProps = {
-    name: string;
+    name: keyof UserDTO;
     type: string;
     autocomplete?: string;
-    value?: string | null;
+    value?: string | undefined; 
+    user: UserDTO;
     events?: {
       blur?: (e: Event) => void;
     };
 };
 
-export default class Input extends Block {
+class Input extends Block {
   constructor(props: InputProps) {
     super('input', {
       ...props,
@@ -20,8 +23,22 @@ export default class Input extends Block {
         type: props.type,
         autocomplete: props.autocomplete,
         required: 'required',
-        value: props.value,
+        value: props.user[props.name],
       },
     });
   }
+  setValue(newText: string) {
+    this.setProps({ value: newText });
+    if (this.element instanceof HTMLInputElement) {
+      this.element.value = newText;
+    }
+  }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(Input);

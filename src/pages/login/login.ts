@@ -1,12 +1,17 @@
 import { InputLogin, Button, LabelError } from '../../components';
 import Block from '../../core/block';
-import { handleInputValidation } from '../../validation';
+import * as authServices from "../../services/auth";
+import { handleInputValidation } from '../../helpers/validation';
+import { connect } from '../../utils/connect';
+import { withRouter } from '../../utils/withRouter';
+import { loadAvatar } from '../../services/resources';
+
 
 type LoginPageProps = {
     isError?: boolean;
 }
 
-export default class LoginPage extends Block {
+class LoginPage extends Block {
   constructor(props:LoginPageProps) {
     super('form', {
       ...props,
@@ -21,7 +26,7 @@ export default class LoginPage extends Block {
         password: '',
       },
       LabelError: new LabelError({
-        text: '',
+        textError: '',
       }),
       InputLogin: new InputLogin({
         text: 'Логин',
@@ -68,6 +73,8 @@ export default class LoginPage extends Block {
           );
 
           if (!this.props.isError) {
+            authServices.login(this.props.formState);
+            loadAvatar(window.store.getState().user);
             console.log(this.props.formState);
             // Здесь можно добавить отправку данных на сервер
           }
@@ -98,3 +105,12 @@ export default class LoginPage extends Block {
         `;
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    isError: state.isError,
+  };
+};
+
+export default connect(mapStateToProps)(withRouter(LoginPage));

@@ -1,0 +1,33 @@
+import EventBus from "./eventBus";
+
+
+export const StoreEvents = {
+  Updated: "Updated",
+} as const
+
+export class Store extends EventBus {
+  private state = {};
+  
+  constructor(defaultState) {
+    if (Store.__instance) {
+      return Store.__instance;
+    }
+    super();
+
+    this.set(defaultState);
+
+    Store.__instance = this;
+  }
+
+  public getState() {
+    return this.state;
+  }
+
+  public set(nextState) {
+    const prevState = { ...this.state };
+
+    this.state = { ...this.state, ...nextState };
+
+    this.emit(StoreEvents.Updated, prevState, nextState);
+  }
+}

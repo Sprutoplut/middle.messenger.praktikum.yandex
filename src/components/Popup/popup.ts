@@ -1,4 +1,5 @@
 import Block from '../../core/block';
+import { connect } from '../../utils/connect';
 import Button from '../Button';
 
 type PopupProps = {
@@ -15,7 +16,7 @@ type PopupProps = {
     onClickPopup?: (e: Event) => void;
 }
 
-export default class Popup extends Block {
+class Popup extends Block {
   constructor(props: PopupProps) {
     super('div', {
       ...props,
@@ -61,3 +62,11 @@ export default class Popup extends Block {
         `;
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    textError: state.textError,
+  };
+};
+
+export default connect(mapStateToProps)(Popup);

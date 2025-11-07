@@ -127,7 +127,7 @@ export default abstract class Block {
   }
 
   dispatchComponentDidMount() {
-    this.#eventBus().emit(Block.EVENTS.FLOW_CDM);
+    this.#eventBus.emit(Block.EVENTS.FLOW_CDM);
   }
 
   #componentDidUpdate(oldProps: Props, newProps: Props) {
@@ -179,40 +179,97 @@ export default abstract class Block {
   }
 
   #compile() {
-    const propsAndStubs = { ...this.props };
+  const propsAndStubs = { ...this.props };
+  const debugLog: string[] = []; // Для отладки
 
-    Object.entries(this.children).forEach(([key, child]) => {
-      if (Array.isArray(child)) {
-        propsAndStubs[key] = child.map(
-          (component) => `<div data-id="${component.#id}"></div>`,
-        );
-      } else if (child instanceof Block) {
-        propsAndStubs[key] = `<div data-id="${child.#id}"></div>`;
+  // 1. Формируем заглушки с расширенной информацией
+  Object.entries(this.children).forEach(([key, child]) => {
+    if (Array.isArray(child)) {
+      propsAndStubs[key] = child.map((component, index) => {
+        debugLog.push(`Создана заглушка: key=${key}, index=${index}, id=${component.#id}`);
+        return `<div 
+          data-stub-key="${key}"
+          data-stub-index="${index}"
+          data-id="${component.#id}"
+          class="stub"
+          data-debug="array"
+        ></div>`;
+      });
+    } else if (child instanceof Block) {
+      debugLog.push(`Создана заглушка: key=${key}, id=${child.#id}`);
+      propsAndStubs[key] = `<div
+        data-stub-key="${key}"
+        data-id="${child.#id}"
+        class="stub"
+        data-debug="single"
+      ></div>`;
+    }
+  });
+
+  // 2. Создаём фрагмент и компилируем шаблон
+  const fragment = this.#createDocumentElement('template') as HTMLTemplateElement;
+  const template = Handlebars.compile(this.render());
+  fragment.innerHTML = template(propsAndStubs);
+
+  // 3. Собираем все заглушки
+  const stubs = fragment.content.querySelectorAll('.stub');
+  debugLog.push(`Найдено заглушек: ${stubs.length}`);
+
+  // 4. Замена заглушек с детальной проверкой
+  stubs.forEach((stub) => {
+    const key = stub.getAttribute('data-stub-key');
+    const indexStr = stub.getAttribute('data-stub-index');
+    const id = stub.getAttribute('data-id');
+    const debugType = stub.getAttribute('data-debug');
+
+    debugLog.push(`Обработка заглушки: key=${key}, index=${indexStr}, id=${id}, type=${debugType}`);
+
+    let component: Block | undefined = undefined;
+
+    if (indexStr !== null) {
+      // Элемент массива
+      const childArray = this.children[key];
+      if (Array.isArray(childArray)) {
+        const index = parseInt(indexStr, 10);
+        if (!isNaN(index) && index >= 0 && index < childArray.length) {
+          component = childArray[index];
+          debugLog.push(`Найден компонент массива: index=${index}, id=${component.#id}`);
+        } else {
+          debugLog.push(`Ошибка: некорректный индекс ${indexStr} для ключа ${key}`);
+        }
+      } else {
+        debugLog.push(`Ошибка: ключ ${key} не является массивом`);
       }
-    });
-
-    const fragment = this.#createDocumentElement('template') as HTMLTemplateElement;
-    const template = Handlebars.compile(this.render());
-    fragment.innerHTML = template(propsAndStubs);
-
-    Object.values(this.children).forEach((child) => {
-      if (Array.isArray(child)) {
-        child.forEach((component) => {
-          const stub = fragment.content.querySelector(
-            `[data-id="${component.#id}"]`,
-          );
-
-          stub?.replaceWith(component.getContent());
-        });
-      } else if (child instanceof Block) {
-        const stub = fragment.content.querySelector(`[data-id="${child.#id}"]`);
-
-        stub?.replaceWith(child.getContent());
+    } else {
+      // Одиночный компонент
+      component = this.children[key] as Block | undefined;
+      if (component) {
+        debugLog.push(`Найден одиночный компонент: key=${key}, id=${component.#id}`);
+      } else {
+        debugLog.push(`Ошибка: компонент с ключом ${key} не найден`);
       }
-    });
+    }
 
-    return fragment.content;
-  }
+    // Финальная проверка соответствия id
+    if (component && component.#id === id) {
+      const content = component.getContent();
+      stub.replaceWith(content);
+      debugLog.push(`Заменено: ${id} → ${content.tagName}`);
+    } else {
+      console.warn(
+        `[Compile Error] Не найден компонент для заглушки. ` +
+        `key=${key}, index=${indexStr}, expectedId=${id}, ` +
+        `foundComponentId=${component?.#id ?? 'null'}`
+      );
+      debugLog.push(`ПРОВАЛ: key=${key}, index=${indexStr}, id=${id}`);
+    }
+  });
+
+  // Вывод лога отладки (можно отключить в продакшене)
+  console.debug('[Compile Debug]', debugLog.join('\n'));
+
+  return fragment.content;
+}
 
   #render() {
     this.#removeEvents();

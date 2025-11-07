@@ -1,15 +1,6 @@
+import { ChatDTO, MemberListProps } from '../../../../api/type';
 import Block from '../../../../core/block';
 
-type MemberListProps = {
-    MemberPhoto?: string;
-    LastMessageDate?: string;
-    LastMessageWho?: string;
-    LastMessage?: string;
-    CountNoReadMessage?: number;
-    MemberName?: string;
-    check?: string,
-    onClick?: () => void;
-}
 
 export default class MemberList extends Block {
   constructor(props: MemberListProps) {
