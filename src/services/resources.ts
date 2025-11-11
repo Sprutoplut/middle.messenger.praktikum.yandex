@@ -12,7 +12,14 @@ export const loadAvatar = async (model: UserDTO) => {
   try {
     // const avatar = await resourcesApi.getResources(model.avatar);
     // window.store.set({ pathAvatar: avatar.path });
-    window.store.set({ pathAvatar: `https://ya-praktikum.tech/api/v2/resources${model.avatar}` });
+    if (model.avatar === null)
+    {
+      window.store.set({ pathAvatar: "/img/Avatar.png" });
+    }
+    else
+    {
+      window.store.set({ pathAvatar: `https://ya-praktikum.tech/api/v2/resources${model.avatar}` });
+    }
     window.store.set({ isError: false, textError: '' });
   } catch (responsError) {
     window.store.set({ isError: true, textError: 'Error' });
