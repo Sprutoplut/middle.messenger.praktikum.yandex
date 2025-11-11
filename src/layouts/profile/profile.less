@@ -84,13 +84,14 @@
     position: relative;
     overflow: hidden;
 }
+
 .avatar-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6); /* Полупрозрачный чёрный фон */
+  background-color: rgb(0 0 0 / 60%); /* Полупрозрачный чёрный фон */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -105,6 +106,7 @@
 .button__avatar:hover .avatar-overlay {
   opacity: 1; /* Показываем при наведении */
 }
+
 .avatar-img
 {
   width: 100%;
