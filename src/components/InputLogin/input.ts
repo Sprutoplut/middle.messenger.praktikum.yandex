@@ -1,7 +1,7 @@
 import Block from '../../core/block';
 
 type InputProps = {
-    text: string;
+    text?: string;
     name: string;
     type: string;
     autocomplete?: string;

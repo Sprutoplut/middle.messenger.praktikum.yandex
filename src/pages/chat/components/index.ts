@@ -3,3 +3,5 @@ export { default as PeopleChat } from './PeopleChat';
 export { default as MemberList } from './MemberList';
 export { default as MemberMessages } from './MemberMessages';
 export { default as FormMessage } from './FormMessage';
+export { default as LinkProfile } from './LinkProfile';
+export { default as ButtonCreate } from './ButtonCreate';

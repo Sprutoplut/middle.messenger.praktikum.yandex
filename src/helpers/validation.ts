@@ -1,4 +1,4 @@
-import Block from './core/block';
+import Block from '../core/block';
 
 export interface ValidationResult {
     error?: boolean;
@@ -231,11 +231,11 @@ export const handleInputValidation = (
       const { error: fieldError } = validateField(fieldName, value, formState);
       return fieldError;
     });
-    errorText = 'Пожалуйста, исправьте ошибки в форме';
+    if (error === true) errorText = 'Пожалуйста, исправьте ошибки в форме';
   }
 
   setProps({ isError: error });
-  (labelError as Block).setProps({ text: errorText });
+  (labelError as Block).setProps({ textError: errorText });
 
   if (e) {
     if (typeof updateFormState === 'function') updateFormState((e.target as HTMLInputElement).name, (e.target as HTMLInputElement).value);

@@ -1,15 +1,5 @@
+import { MemberListProps } from '../../../../api/type';
 import Block from '../../../../core/block';
-
-type MemberListProps = {
-    MemberPhoto?: string;
-    LastMessageDate?: string;
-    LastMessageWho?: string;
-    LastMessage?: string;
-    CountNoReadMessage?: number;
-    MemberName?: string;
-    check?: string,
-    onClick?: () => void;
-}
 
 export default class MemberList extends Block {
   constructor(props: MemberListProps) {
@@ -25,7 +15,7 @@ export default class MemberList extends Block {
   public render(): string {
     return `
         <div class="chat__list__member list__member__{{check}}">
-            <img src={{MemberPhoto}} alt="">
+            <img src="{{MemberPhoto}}" alt="">
             <div class="chat__list__member__content">
                 <p class="member-name">{{MemberName}}</p>
                 {{#if LastMessageDate}}

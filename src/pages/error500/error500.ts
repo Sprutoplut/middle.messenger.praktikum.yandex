@@ -1,7 +1,8 @@
 import { LabelBig, LabelLogin } from '../../components';
 import Block from '../../core/block';
+import withRouter from '../../utils/withRouter';
 
-export default class Error500Page extends Block {
+class Error500Page extends Block {
   constructor() {
     super('div', {
       LabelBig: new LabelBig({
@@ -20,3 +21,5 @@ export default class Error500Page extends Block {
         `;
   }
 }
+
+export default withRouter(Error500Page);

@@ -2,27 +2,43 @@ import {
   ButtonArrow, LabelError, Popup,
 } from '../../components';
 import Block from '../../core/block';
+import { ProfileChangeDataPage, ProfileChangePasswordPage, ProfilePage } from '../../pages';
 import { ButtonAvatar, LinkProfile, PopupProfile } from './components';
+import * as authServices from '../../services/auth';
+import withRouter from '../../utils/withRouter';
+import PATH from '../../helpers/path';
+import { StoreState, UserDTO } from '../../api/type';
+import connect from '../../utils/connect';
+import { updateUserAvatar } from '../../services/resources';
 
 type ProfileLayoutProps = {
     isShow?: boolean,
-    body: Block,
     valueFile?: string,
     name?: string,
     change?: boolean,
+    profile?: boolean,
+    profileData?: boolean,
     formState?: Record<string, string>,
     inputErrors?: string,
-    filesInput?: FileList | null
+    filesInput?: FileList | null,
+    oldPassword?: string,
+    user?: UserDTO,
 }
 
-export default class ProfileLayout extends Block {
+class ProfileLayout extends Block {
   constructor(props:ProfileLayoutProps) {
     super('section', {
       ...props,
       filesInput: null,
       className: 'section__profile',
+      profile: true,
+      profileData: false,
+      bodyProfile: new ProfilePage({}),
+      bodyProfileData: new ProfileChangeDataPage({}),
+      bodyProfilePassword: new ProfileChangePasswordPage({
+      }),
       Popup: new Popup({
-        onClickPopup: (e) => {
+        onClickPopup: (e: Event) => {
           if (e.target === e.currentTarget) {
             this.setProps({ isShow: false });
           }
@@ -32,7 +48,7 @@ export default class ProfileLayout extends Block {
         formID: 'formProfile',
         enctype: 'multipart/form-data',
         LabelError: new LabelError({
-          text: 'Нужно выбрать файл',
+          textError: 'Нужно выбрать файл',
         }),
         partial_block: new PopupProfile({
           onChange: (e) => {
@@ -62,43 +78,19 @@ export default class ProfileLayout extends Block {
             }
           },
         }),
-        onClick: (e) => {
+        onClick: (e: Event) => {
           e.preventDefault();
           if (this.children.Popup instanceof Block) {
             if (this.children.Popup.children.partial_block instanceof Block) {
               if (this.children.Popup.children.partial_block.props.nameFile === undefined) {
                 this.children.Popup.setProps({ textError: 'Нужно выбрать файл' });
               } else {
-                const avatarInput = document.querySelector('#profile-avatar') as HTMLInputElement;
-                if (
-                  avatarInput
-              && this.props.filesInput
-              && (this.props.filesInput as FileList).length > 0
-                ) {
-                  const file = (this.props.filesInput as FileList)[0];
-
-                  // Проверяем, что файл существует и имеет необходимые свойства
-                  if (file && file.name && file.type && file.lastModified) {
-                    // Создаем новый File объект
-                    const newFile = new File([file], file.name, {
-                      type: file.type,
-                      lastModified: file.lastModified,
-                    });
-
-                    // Создаем новый FileList
-                    const fileList = new DataTransfer();
-                    fileList.items.add(newFile);
-
-                    // Устанавливаем новый FileList в целевой input
-                    avatarInput.files = fileList.files;
-                    console.log('Передали в скрытый input');
-                  } else {
-                    console.error('Неверный формат файла');
-                  }
-                } else {
-                  console.log('Передаем сразу на сервер файл');
-                  console.log(this.props.filesInput);
-                }
+                const formData = new FormData();
+                formData.append('avatar', (this.props.filesInput as FileList)[0]); // ключевое поле API
+                const formData2 = new FormData();
+                formData2.append('resource', (this.props.filesInput as FileList)[0]); // ключевое поле API
+                updateUserAvatar(formData2, formData);
+                this.setProps({ isShow: false });
                 this.children.Popup.setProps({
                   title: 'Загрузите файл',
                   red: '',
@@ -107,7 +99,6 @@ export default class ProfileLayout extends Block {
                 this.children.Popup.children.partial_block.setProps({
                   nameFile: '',
                 });
-                this.setProps({ isShow: false });
               }
             }
           }
@@ -116,11 +107,12 @@ export default class ProfileLayout extends Block {
       ButtonArrow: new ButtonArrow({
         onClick: (e) => {
           e.preventDefault();
-          console.log('Нажатие');
+          this.setProps({ profile: true, change: false });
+          window.router.go(PATH.chat);
         },
       }),
       ButtonAvatar: new ButtonAvatar({
-        onClick: (e) => {
+        onClick: (e: Event) => {
           e.preventDefault();
           this.setProps({ isShow: true });
           const popupFile = document.querySelector('#popup_file') as HTMLInputElement;
@@ -134,12 +126,24 @@ export default class ProfileLayout extends Block {
       }),
       LinkProfileData: new LinkProfile({
         text: 'Изменить данные',
+        onClick: (e) => {
+          e.preventDefault();
+          this.setProps({ profileData: true, profile: false, change: true });
+        },
       }),
       LinkProfilePassword: new LinkProfile({
-        text: 'Изменить данные',
+        text: 'Изменить пароль',
+        onClick: (e) => {
+          e.preventDefault();
+          this.setProps({ profileData: false, profile: false, change: true });
+        },
       }),
       LinkProfileExit: new LinkProfile({
         text: 'Выйти',
+        onClick: (e) => {
+          e.preventDefault();
+          authServices.logout();
+        },
       }),
     });
   }
@@ -157,11 +161,19 @@ export default class ProfileLayout extends Block {
                     <div class="profile__header">
                         {{{ButtonAvatar}}}
                         {{#unless change}}
-                            <p class="profile__my_name">{{name}}</p>
+                            <p class="profile__my_name">{{user.first_name}}</p>
                         {{/unless}}
                     </div>
                     <div class="profile__body">
-                        {{{body}}}
+                        {{#if profile}}
+                          {{{bodyProfile}}}
+                        {{else}}
+                          {{#if profileData}}
+                            {{{bodyProfileData}}}
+                          {{else}}
+                            {{{bodyProfilePassword}}}
+                          {{/if}}
+                        {{/if}}
                         <div class="profile__footer">
                             {{#unless change}}
                                 {{{LinkProfileData}}}
@@ -175,3 +187,9 @@ export default class ProfileLayout extends Block {
         `;
   }
 }
+
+const mapStateToProps = (state: StoreState) => ({
+  user: state.user,
+});
+
+export default connect(mapStateToProps)(withRouter(ProfileLayout));
