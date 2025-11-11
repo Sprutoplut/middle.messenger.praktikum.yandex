@@ -295,7 +295,7 @@ export async function mapChatToMemberListProps(chat: ChatDTO): Promise<MemberLis
       props.MemberPhoto = '/img/Avatar.png';
     }
   } else {
-    props.MemberPhoto = chat.avatar;
+    props.MemberPhoto = `https://ya-praktikum.tech/api/v2/resources${chat.avatar}`;
   }
 
   // CountNoReadMessage — количество непрочитанных сообщений
