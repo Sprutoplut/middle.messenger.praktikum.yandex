@@ -90,7 +90,9 @@ export const checkLoginUser = async (throwOnError: boolean = false) => {
           // 401 — не логируем, просто перенаправляем
           const { pathname } = window.location;
           if (pathname !== PATH.register) {
-            window.router.go(PATH.login);
+            if (Object.values(PATH).some((path) => path === pathname)) {
+              window.router.go(PATH.login);
+            }
           }
           return;
         }
