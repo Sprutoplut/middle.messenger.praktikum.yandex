@@ -12,12 +12,9 @@ export const loadAvatar = async (model: UserDTO) => {
   try {
     // const avatar = await resourcesApi.getResources(model.avatar);
     // window.store.set({ pathAvatar: avatar.path });
-    if (model.avatar === null)
-    {
-      window.store.set({ pathAvatar: "/img/Avatar.png" });
-    }
-    else
-    {
+    if (model.avatar === null) {
+      window.store.set({ pathAvatar: '/img/Avatar.png' });
+    } else {
       window.store.set({ pathAvatar: `https://ya-praktikum.tech/api/v2/resources${model.avatar}` });
     }
     window.store.set({ isError: false, textError: '' });
