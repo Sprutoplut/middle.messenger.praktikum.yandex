@@ -1,11 +1,10 @@
-
 const METHOD = {
-  GET: "GET",
-  POST: "POST",
-  PUT: "PUT",
-  PATCH: "PATCH",
-  DELETE: "DELETE",
-} as const
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  PATCH: 'PATCH',
+  DELETE: 'DELETE',
+} as const;
 
 type Method = typeof METHOD[keyof typeof METHOD];
 
@@ -17,7 +16,7 @@ type Options = {
     tries?: number;
 };
 
-type OptionsWithoutMethod = Omit<Options, "method">;
+type OptionsWithoutMethod = Omit<Options, 'method'>;
 
 function queryStringify(data: Record<string, string>) {
   if (typeof data !== 'object') {
@@ -32,8 +31,9 @@ function queryStringify(data: Record<string, string>) {
   );
 }
 
-export class HTTPTransport {
-  private apiUrl: string = "";
+export default class HTTPTransport {
+  private apiUrl: string = '';
+
   constructor(apiPath: string) {
     this.apiUrl = `https://ya-praktikum.tech/api/v2/${apiPath}`;
   }
@@ -60,7 +60,7 @@ export class HTTPTransport {
 
   put<TResponse>(
     url: string,
-    options: OptionsWithoutMethod = {}
+    options: OptionsWithoutMethod = {},
   ): Promise<TResponse> {
     return this.request<TResponse>(`${this.apiUrl}${url}`, {
       ...options,
@@ -70,7 +70,7 @@ export class HTTPTransport {
 
   delete<TResponse>(
     url: string,
-    options: OptionsWithoutMethod = {}
+    options: OptionsWithoutMethod = {},
   ): Promise<TResponse> {
     return this.request<TResponse>(`${this.apiUrl}${url}`, {
       ...options,
@@ -79,14 +79,14 @@ export class HTTPTransport {
   }
 
   async request<TResponse>(
-  url: string,
-  options: Options = {},
-  timeout: number = 5000
-): Promise<TResponse> {
-  const { headers = {}, method, data } = options;
+    url: string,
+    options: Options = {},
+    timeout: number = 5000,
+  ): Promise<TResponse> {
+    const { headers = {}, method, data } = options;
 
-  return new Promise((resolve, reject) => {
-    if (!method) {
+    return new Promise((resolve, reject) => {
+      if (!method) {
         // Создаём Response с ошибкой
         const errorResponse = new Response(null, {
           status: 0,
@@ -96,26 +96,24 @@ export class HTTPTransport {
         return;
       }
 
-    const xhr = new XMLHttpRequest();
-    const isGet = method === METHOD.GET;
+      const xhr = new XMLHttpRequest();
+      const isGet = method === METHOD.GET;
 
-    
+      xhr.open(
+        method,
+        isGet && !!data ? `${url}${queryStringify(data as Record<string, string>)}` : url,
+      );
+      xhr.withCredentials = true;
+      Object.keys(headers).forEach((key) => {
+        xhr.setRequestHeader(key, headers[key]);
+      });
 
-    xhr.open(
-      method,
-      isGet && !!data ? `${url}${queryStringify(data as Record<string, string>)}` : url,
-    );
-    xhr.withCredentials = true;
-    Object.keys(headers).forEach((key) => {
-      xhr.setRequestHeader(key, headers[key]);
-    });
+      // Устанавливаем ожидаемый тип ответа
+      xhr.responseType = 'json';
 
-    // Устанавливаем ожидаемый тип ответа
-    xhr.responseType = 'json';
-
-    xhr.onload = function load() {
+      xhr.onload = function load() {
       // Проверяем статус
-      const status = xhr.status;
+        const { status } = xhr;
         if (status >= 200 && status < 300) {
           let responseData: TResponse | null = null;
           if (xhr.response) {
@@ -142,7 +140,7 @@ export class HTTPTransport {
         }
       };
 
-    xhr.onabort = () => {
+      xhr.onabort = () => {
         const errorResponse = new Response(null, {
           status: 0,
           statusText: 'Request aborted',
@@ -167,22 +165,22 @@ export class HTTPTransport {
         reject(errorResponse);
       };
 
-    if (isGet || !data) {
-      xhr.send();
-    } else {
-      let body: XMLHttpRequestBodyInit | null = null;
-
-      if (data instanceof FormData) {
-        body = data;
-      } else if (typeof data === 'string') {
-        body = data;
+      if (isGet || !data) {
+        xhr.send();
       } else {
-        body = JSON.stringify(data);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-      }
+        let body: XMLHttpRequestBodyInit | null = null;
 
-      xhr.send(body);
-    }
-  });
-}
+        if (data instanceof FormData) {
+          body = data;
+        } else if (typeof data === 'string') {
+          body = data;
+        } else {
+          body = JSON.stringify(data);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+        }
+
+        xhr.send(body);
+      }
+    });
+  }
 }

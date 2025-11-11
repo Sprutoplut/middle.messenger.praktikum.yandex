@@ -4,14 +4,12 @@ import {
 import Block from '../../core/block';
 import { ProfileChangeDataPage, ProfileChangePasswordPage, ProfilePage } from '../../pages';
 import { ButtonAvatar, LinkProfile, PopupProfile } from './components';
-import * as authServices from "../../services/auth";
-import { protectedRoute } from '../../utils/protectedRoute';
-import { withRouter } from '../../utils/withRouter';
-import { PATH } from '../../helpers/path';
-import { UserDTO } from '../../api/type';
-import { connect } from '../../utils/connect';
-import { loadAvatar, saveAvatar, updateUserAvatar } from '../../services/resources';
-import { changeAvatar } from '../../services/users';
+import * as authServices from '../../services/auth';
+import withRouter from '../../utils/withRouter';
+import PATH from '../../helpers/path';
+import { StoreState, UserDTO } from '../../api/type';
+import connect from '../../utils/connect';
+import { updateUserAvatar } from '../../services/resources';
 
 type ProfileLayoutProps = {
     isShow?: boolean,
@@ -40,7 +38,7 @@ class ProfileLayout extends Block {
       bodyProfilePassword: new ProfileChangePasswordPage({
       }),
       Popup: new Popup({
-        onClickPopup: (e) => {
+        onClickPopup: (e: Event) => {
           if (e.target === e.currentTarget) {
             this.setProps({ isShow: false });
           }
@@ -80,7 +78,7 @@ class ProfileLayout extends Block {
             }
           },
         }),
-        onClick: (e) => {
+        onClick: (e: Event) => {
           e.preventDefault();
           if (this.children.Popup instanceof Block) {
             if (this.children.Popup.children.partial_block instanceof Block) {
@@ -91,7 +89,7 @@ class ProfileLayout extends Block {
                 formData.append('avatar', (this.props.filesInput as FileList)[0]); // ключевое поле API
                 const formData2 = new FormData();
                 formData2.append('resource', (this.props.filesInput as FileList)[0]); // ключевое поле API
-                updateUserAvatar(formData2,formData);
+                updateUserAvatar(formData2, formData);
                 this.setProps({ isShow: false });
                 this.children.Popup.setProps({
                   title: 'Загрузите файл',
@@ -101,7 +99,6 @@ class ProfileLayout extends Block {
                 this.children.Popup.children.partial_block.setProps({
                   nameFile: '',
                 });
-                
               }
             }
           }
@@ -110,12 +107,12 @@ class ProfileLayout extends Block {
       ButtonArrow: new ButtonArrow({
         onClick: (e) => {
           e.preventDefault();
-          this.setProps({profile: true, change: false});
+          this.setProps({ profile: true, change: false });
           window.router.go(PATH.chat);
         },
       }),
       ButtonAvatar: new ButtonAvatar({
-        onClick: (e) => {
+        onClick: (e: Event) => {
           e.preventDefault();
           this.setProps({ isShow: true });
           const popupFile = document.querySelector('#popup_file') as HTMLInputElement;
@@ -132,27 +129,26 @@ class ProfileLayout extends Block {
         onClick: (e) => {
           e.preventDefault();
           this.setProps({ profileData: true, profile: false, change: true });
-        }
+        },
       }),
       LinkProfilePassword: new LinkProfile({
         text: 'Изменить пароль',
         onClick: (e) => {
           e.preventDefault();
-          this.setProps({ profileData: false, profile: false, change: true  });
-        }
+          this.setProps({ profileData: false, profile: false, change: true });
+        },
       }),
       LinkProfileExit: new LinkProfile({
         text: 'Выйти',
         onClick: (e) => {
           e.preventDefault();
           authServices.logout();
-        }
+        },
       }),
     });
   }
-  
-  public render(): string {
 
+  public render(): string {
     return `
             {{#if isShow}}
                 {{{Popup}}}
@@ -165,7 +161,7 @@ class ProfileLayout extends Block {
                     <div class="profile__header">
                         {{{ButtonAvatar}}}
                         {{#unless change}}
-                            <p class="profile__my_name">{{name}}</p>
+                            <p class="profile__my_name">{{user.first_name}}</p>
                         {{/unless}}
                     </div>
                     <div class="profile__body">
@@ -192,10 +188,8 @@ class ProfileLayout extends Block {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-  };
-};
+const mapStateToProps = (state: StoreState) => ({
+  user: state.user,
+});
 
-export default connect(mapStateToProps)(withRouter(protectedRoute(ProfileLayout)));
+export default connect(mapStateToProps)(withRouter(ProfileLayout));

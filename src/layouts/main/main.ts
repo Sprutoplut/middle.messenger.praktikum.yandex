@@ -1,7 +1,7 @@
 import Block from '../../core/block';
 
 type MainLayoutProps = {
-    body: Block
+    body: Block | unknown
 }
 
 export default class MainLayout extends Block {

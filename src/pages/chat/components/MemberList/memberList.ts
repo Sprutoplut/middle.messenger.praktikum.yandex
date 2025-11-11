@@ -1,6 +1,5 @@
-import { ChatDTO, MemberListProps } from '../../../../api/type';
+import { MemberListProps } from '../../../../api/type';
 import Block from '../../../../core/block';
-
 
 export default class MemberList extends Block {
   constructor(props: MemberListProps) {
@@ -12,10 +11,11 @@ export default class MemberList extends Block {
       },
     });
   }
+
   public render(): string {
     return `
         <div class="chat__list__member list__member__{{check}}">
-            <img src={{MemberPhoto}} alt="">
+            <img src="{{MemberPhoto}}" alt="">
             <div class="chat__list__member__content">
                 <p class="member-name">{{MemberName}}</p>
                 {{#if LastMessageDate}}

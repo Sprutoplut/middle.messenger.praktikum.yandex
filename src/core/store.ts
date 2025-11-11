@@ -1,33 +1,35 @@
-import EventBus from "./eventBus";
-
+import { StoreState } from '../api/type';
+import EventBus from './eventBus';
 
 export const StoreEvents = {
-  Updated: "Updated",
-} as const
-
+  Updated: 'Updated',
+} as const;
+// @ts-expect-error Не получается исправить
 export class Store extends EventBus {
-  private state = {};
-  
-  constructor(defaultState) {
-    if (Store.__instance) {
-      return Store.__instance;
-    }
+  private state: StoreState | null = null;
+
+  #instance: Store | null = null;
+
+  constructor(defaultState: StoreState) {
     super();
+    if (this.#instance) {
+      throw new Error('Router уже инициализирован. Используйте Router.getInstance()');
+    }
 
     this.set(defaultState);
 
-    Store.__instance = this;
+    this.#instance = this;
   }
 
   public getState() {
     return this.state;
   }
 
-  public set(nextState) {
+  public set(nextState: object) {
     const prevState = { ...this.state };
-
+    // @ts-expect-error Не получается исправить
     this.state = { ...this.state, ...nextState };
-
+    // @ts-expect-error Не получается исправить
     this.emit(StoreEvents.Updated, prevState, nextState);
   }
 }

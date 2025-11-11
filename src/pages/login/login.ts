@@ -1,11 +1,11 @@
 import { InputLogin, Button, LabelError } from '../../components';
 import Block from '../../core/block';
-import * as authServices from "../../services/auth";
+import * as authServices from '../../services/auth';
 import { handleInputValidation } from '../../helpers/validation';
-import { connect } from '../../utils/connect';
-import { withRouter } from '../../utils/withRouter';
+import connect from '../../utils/connect';
+import withRouter from '../../utils/withRouter';
 import { loadAvatar } from '../../services/resources';
-
+import { LoginRequestData, StoreState, UserDTO } from '../../api/type';
 
 type LoginPageProps = {
     isError?: boolean;
@@ -73,9 +73,8 @@ class LoginPage extends Block {
           );
 
           if (!this.props.isError) {
-            authServices.login(this.props.formState);
-            loadAvatar(window.store.getState().user);
-            console.log(this.props.formState);
+            authServices.login(this.props.formState as LoginRequestData);
+            loadAvatar(((window.store.getState() as StoreState).user as UserDTO));
             // Здесь можно добавить отправку данных на сервер
           }
         },
@@ -106,11 +105,8 @@ class LoginPage extends Block {
   }
 }
 
-
-const mapStateToProps = (state) => {
-  return {
-    isError: state.isError,
-  };
-};
+const mapStateToProps = (state: StoreState) => ({
+  isError: state.isError,
+});
 
 export default connect(mapStateToProps)(withRouter(LoginPage));

@@ -1,8 +1,10 @@
-export const PATH = {
-  login: "/",
-  register: "/sign-up",
-  profile: "/settings",
-  profileChangeData: "/settings-data",
-  profileChangePassword: "/settings-password",
-  chat: "/messenger",
-} as const
+const PATH = {
+  login: '/',
+  register: '/sign-up',
+  profile: '/settings',
+  profileChangeData: '/settings-data',
+  profileChangePassword: '/settings-password',
+  chat: '/messenger',
+} as const;
+
+export default PATH;

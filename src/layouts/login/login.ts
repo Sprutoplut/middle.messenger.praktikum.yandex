@@ -3,7 +3,7 @@ import Block from '../../core/block';
 
 type LoginLayoutProps = {
     nameForm:string;
-    body: Block;
+    body: Block | unknown;
     textLink: string;
     href: string;
 }

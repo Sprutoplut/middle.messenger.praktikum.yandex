@@ -1,5 +1,5 @@
-import Block from "./block";
-import { RouteInterface } from "./router";
+import Block from './block';
+import { RouteInterface } from './router';
 
 type Props = {
   [key: string]: unknown;
@@ -7,10 +7,14 @@ type Props = {
 }
 
 class Route implements RouteInterface {
-    #pathname: string;
-    #blockClass: Block;
-    #block: Block | null;
-    #props: Props;
+  #pathname: string;
+
+  #blockClass: Block;
+
+  #block: Block | null;
+
+  #props: Props;
+
   constructor(pathname: string, view: Block, props: Props) {
     this.#pathname = pathname;
     this.#blockClass = view;
@@ -37,10 +41,9 @@ class Route implements RouteInterface {
 
   #renderDom(query: string, block: Block) {
     const root = document.querySelector(query);
-    if(root)
-    {
-        root.innerHTML = "";
-        root.append(block.getContent());
+    if (root) {
+      root.innerHTML = '';
+      root.append(block.getContent());
     }
   }
 

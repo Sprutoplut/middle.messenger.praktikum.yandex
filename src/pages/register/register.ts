@@ -1,8 +1,9 @@
 import { InputLogin, Button, LabelError } from '../../components';
 import Block from '../../core/block';
 import { handleInputValidation } from '../../helpers/validation';
-import { connect } from '../../utils/connect';
-import * as authServices from "../../services/auth";
+import connect from '../../utils/connect';
+import * as authServices from '../../services/auth';
+import { CreateUser, StoreState } from '../../api/type';
 
 type LoginPageProps = {
     isError?: boolean;
@@ -144,7 +145,7 @@ class RegisterPage extends Block {
           );
 
           if (!this.props.isError) {
-            authServices.register(this.props.formState);
+            authServices.register(this.props.formState as CreateUser);
             // Здесь можно добавить отправку данных на сервер
           }
         },
@@ -180,11 +181,8 @@ class RegisterPage extends Block {
   }
 }
 
+const mapStateToProps = (state: StoreState) => ({
+  isError: state.isError,
+});
 
-const mapStateToProps = (state) => {
-  return {
-    isError: state.isError,
-  };
-};
-
-export default connect(mapStateToProps)(RegisterPage)
+export default connect(mapStateToProps)(RegisterPage);

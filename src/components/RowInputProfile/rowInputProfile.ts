@@ -1,12 +1,12 @@
-import { UserDTO } from '../../api/type';
+import { StoreState, UserDTO } from '../../api/type';
 import Block from '../../core/block';
-import { connect } from '../../utils/connect';
+import connect from '../../utils/connect';
 import Input from './input';
 
 type RowInputProfileProps = {
     name: string;
     nameValue: keyof UserDTO;
-    user: UserDTO;     // Теперь получаем user целиком
+    user: UserDTO; // Теперь получаем user целиком
     type: string;
     autocomplete?: string;
     empty?: boolean;
@@ -22,16 +22,17 @@ class RowInputProfile extends Block {
         name: props.nameValue,
         type: props.type,
         autocomplete: props.autocomplete,
-        value: props.user[props.nameValue],
         events: {
-          blur: props.onBlur
-        }
-      })
+          blur: props.onBlur,
+        },
+      }),
     });
   }
 
-  componentDidUpdate(){
+  componentDidUpdate() {
+    // @ts-expect-error Не получается исправить
     this.children.Input.setValue(this.props.user[this.props.nameValue]);
+    return true;
   }
 
   public render(): string {
@@ -42,12 +43,8 @@ class RowInputProfile extends Block {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-  };
-};
+const mapStateToProps = (state: StoreState) => ({
+  user: state.user,
+});
 
 export default connect(mapStateToProps)(RowInputProfile);
-
-

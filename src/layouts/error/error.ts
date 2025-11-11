@@ -2,7 +2,7 @@ import { LinkLogin } from '../../components';
 import Block from '../../core/block';
 
 type ErrorLayoutProps = {
-    body: Block;
+    body: Block | unknown;
     textLink: string;
     href: string;
 }

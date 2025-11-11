@@ -1,10 +1,10 @@
-import { UserDTO } from '../../api/type';
+import { StoreState, UserDTO } from '../../api/type';
 import Block from '../../core/block';
-import { connect } from '../../utils/connect';
+import connect from '../../utils/connect';
 
 type RowLabelProfileProps = {
     name?: string;
-    user: UserDTO;      // Теперь получаем user целиком
+    user: UserDTO; // Теперь получаем user целиком
     field: keyof UserDTO; // Ключ поля (email, login и т. д.)
 }
 
@@ -17,8 +17,8 @@ class RowLabelProfile extends Block {
   }
 
   public render(): string {
-    const { name = '', user, field } = this.props;
-    const value = user[field] ?? ''; // Извлекаем значение по ключу
+    const { user, field } = this.props;
+    const value = (user as UserDTO)[field as keyof UserDTO] ?? ''; // Извлекаем значение по ключу
     return `
             <p class="profile__name">{{name}}</p>
             <p class="profile__value">${value}</p>
@@ -26,10 +26,8 @@ class RowLabelProfile extends Block {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-  };
-};
+const mapStateToProps = (state: StoreState) => ({
+  user: state.user,
+});
 
 export default connect(mapStateToProps)(RowLabelProfile);

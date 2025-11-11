@@ -1,9 +1,9 @@
-import { HTTPTransport } from "../core/httpTransport";
+import HTTPTransport from '../core/httpTransport';
 import {
   Resource,
-} from "./type";
+} from './type';
 
-const authApi = new HTTPTransport("resources");
+const authApi = new HTTPTransport('resources');
 
 export default class ResourcesApi {
   async getResources(data: string): Promise<Resource> {
@@ -11,6 +11,6 @@ export default class ResourcesApi {
   }
 
   async postResources(data: FormData): Promise<Resource> {
-    return authApi.post("",{ data });
+    return authApi.post('', { data });
   }
 }

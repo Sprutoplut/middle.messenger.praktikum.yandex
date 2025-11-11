@@ -1,5 +1,6 @@
+import { StoreState } from '../../api/type';
 import Block from '../../core/block';
-import { connect } from '../../utils/connect';
+import connect from '../../utils/connect';
 import Button from '../Button';
 
 type PopupProps = {
@@ -40,7 +41,7 @@ class Popup extends Block {
   setLabelText(newText: string) {
     if (this.children.LabelError instanceof Block) {
       this.children.LabelError.setProps(
-        { text: newText },
+        { textError: newText },
       );
     }
   }
@@ -63,10 +64,8 @@ class Popup extends Block {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    textError: state.textError,
-  };
-};
+const mapStateToProps = (state: StoreState) => ({
+  textError: state.textError,
+});
 
 export default connect(mapStateToProps)(Popup);

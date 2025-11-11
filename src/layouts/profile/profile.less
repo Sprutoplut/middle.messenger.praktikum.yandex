@@ -82,19 +82,35 @@
     height: 130px;
     border-radius: 50%;
     position: relative;
-    background-image: url("/img/Avatar.png");
-    background-size: contain;
-    background-repeat: no-repeat;
+    overflow: hidden;
+}
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Полупрозрачный чёрный фон */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none; /* Чтобы не мешал кликам по аватару */
+}
 
-    &:hover,&:focus
-    {
-        background: url("/img/Avatar.png");
-    }
-
-    &:hover .place__avatar
-    {
-        opacity: 0.5;
-    }
+.button__avatar:hover .avatar-overlay {
+  opacity: 1; /* Показываем при наведении */
+}
+.avatar-img
+{
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Сохраняем пропорции, заполняем контейнер */
+  display: block;
 }
 
 .place__avatar p

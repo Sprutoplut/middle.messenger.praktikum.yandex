@@ -231,8 +231,7 @@ export const handleInputValidation = (
       const { error: fieldError } = validateField(fieldName, value, formState);
       return fieldError;
     });
-    if (error === true)
-      errorText = 'Пожалуйста, исправьте ошибки в форме';
+    if (error === true) errorText = 'Пожалуйста, исправьте ошибки в форме';
   }
 
   setProps({ isError: error });

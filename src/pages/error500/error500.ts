@@ -1,6 +1,6 @@
 import { LabelBig, LabelLogin } from '../../components';
 import Block from '../../core/block';
-import { withRouter } from '../../utils/withRouter';
+import withRouter from '../../utils/withRouter';
 
 class Error500Page extends Block {
   constructor() {

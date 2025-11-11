@@ -17,7 +17,7 @@ export type UserDTO = {
     email: string;
 };
 
-export type CreateUser = Omit<UserDTO, 'avatar' | 'display_name' | 'id'>  & {
+export type CreateUser = Omit<UserDTO, 'avatar' | 'display_name' | 'id'> & {
     password: string
 }
 
@@ -54,6 +54,12 @@ export type Resource = {
     upload_date: string,
 }
 
+export type ChangePasswordForm = {
+    password: string,
+    oldPassword: string,
+    password_repeat: string,
+}
+
 export type ChangePassword = {
     oldPassword: string,
     newPassword: string
@@ -70,6 +76,7 @@ export type GetChatsParameter = {
 }
 
 export type messages = {
+    id?: number;
     message?: string;
     time?: string;
     author?: string;
@@ -79,6 +86,10 @@ export type messages = {
 export type messagesBlock = {
     messages: messages[],
     dateBlock?: string,
+}
+
+export type MemberMessagesProps = {
+     messagesBlock?: messagesBlock[],
 }
 
 export type MemberListProps = {
@@ -92,3 +103,53 @@ export type MemberListProps = {
     onClick?: () => void;
 }
 
+export type TokenChat = {
+    token: string,
+}
+
+export type AddUser = {
+    users?: [] | unknown;
+    chatId: number | unknown;
+}
+
+export type WSMessageResponse = {
+    id: number;
+  chat_id: number;
+  time: string; // "2025-11-08T12:34:56Z"
+  type: 'message' | 'file';
+  user_id: number;
+  content: string;
+  is_read: boolean;
+  file?: {
+    id: number;
+    user_id: number;
+    path: string;
+    filename: string;
+    content_type: string;
+    content_size: number;
+    upload_date: string;
+  };
+};
+
+export type UnreadCount = {
+  unread_count: number;
+}
+
+export type StoreState = {
+  user: UserDTO | null;
+  isError: boolean;
+  textError: string;
+  pathAvatar: string;
+  Activeindex: number;
+  members: MemberListProps[] | [];
+  membersTemp: MemberListProps[] | [];
+  messagesBlock: messagesBlock[] | [];
+};
+
+export type Message = {
+    content: string,
+    timestamp: number,
+    userId: number,
+    is_read: boolean,
+    id: number
+}

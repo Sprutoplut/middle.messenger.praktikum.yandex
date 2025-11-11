@@ -1,9 +1,9 @@
-import { UserDTO } from '../../api/type';
+import { StoreState, UserDTO } from '../../api/type';
 import { Button, LabelError, RowInputProfile } from '../../components';
 import Block from '../../core/block';
 import { handleInputValidation } from '../../helpers/validation';
-import { connect } from '../../utils/connect';
-import * as usersServices from "../../services/users";
+import connect from '../../utils/connect';
+import * as usersServices from '../../services/users';
 
 type ProfilePageProps = {
     user: UserDTO;
@@ -22,7 +22,7 @@ class ProfilePageChangeData extends Block {
         type: 'email',
         autocomplete: 'email',
         user: props.user,
-        onBlur: (e) => handleInputValidation(
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
@@ -36,7 +36,7 @@ class ProfilePageChangeData extends Block {
         type: 'text',
         autocomplete: 'login',
         user: props.user,
-        onBlur: (e) => handleInputValidation(
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
@@ -50,7 +50,7 @@ class ProfilePageChangeData extends Block {
         type: 'text',
         autocomplete: 'given-name',
         user: props.user,
-        onBlur: (e) => handleInputValidation(
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
@@ -64,7 +64,7 @@ class ProfilePageChangeData extends Block {
         type: 'text',
         autocomplete: 'family-name',
         user: props.user,
-        onBlur: (e) => handleInputValidation(
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
@@ -78,7 +78,7 @@ class ProfilePageChangeData extends Block {
         type: 'text',
         autocomplete: 'given-name',
         user: props.user,
-        onBlur: (e) => handleInputValidation(
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
@@ -92,7 +92,7 @@ class ProfilePageChangeData extends Block {
         type: 'tel',
         autocomplete: 'tel',
         user: props.user,
-        onBlur: (e) => handleInputValidation(
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
@@ -111,7 +111,7 @@ class ProfilePageChangeData extends Block {
           e.preventDefault();
 
           // Выполняем полную валидацию при submit (передаем null)
-          handleInputValidation( 
+          handleInputValidation(
             null, // передаем null для полной валидации
             this.setProps.bind(this),
             this.children.LabelError,
@@ -120,8 +120,7 @@ class ProfilePageChangeData extends Block {
           );
 
           if (!this.props.isError) {
-            usersServices.changeData(this.props.user);
-            console.log(this.props.user);
+            usersServices.changeData(this.props.user as UserDTO);
           }
         },
       },
@@ -157,11 +156,9 @@ class ProfilePageChangeData extends Block {
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-    isError: state.isError
-  };
-};
+const mapStateToProps = (state: StoreState) => ({
+  user: state.user,
+  isError: state.isError,
+});
 
 export default connect(mapStateToProps)(ProfilePageChangeData);
