@@ -1,21 +1,8 @@
+import { MemberMessagesProps, StoreState } from '../../../../api/type';
 import Block from '../../../../core/block';
+import connect from '../../../../utils/connect';
 
-type messages = {
-    message?: string;
-    time?: string;
-    author?: string;
-    read?: string;
-}
-type messagesBlock = {
-    messages: messages[],
-    dateBlock?: string,
-}
-
-type MemberMessagesProps = {
-     messagesBlock?: messagesBlock[],
-}
-
-export default class MemberMessages extends Block {
+class MemberMessages extends Block {
   constructor(props: MemberMessagesProps) {
     super('div', {
       ...props,
@@ -36,14 +23,21 @@ export default class MemberMessages extends Block {
                                         {{this.time}}
                                     </span>
                                     {{#unless this.author}}
-                                        <img class="message__row-read" src="{{this.read}}" alt="">
+                                        <img class="message__row-read" src="/img/{{this.read}}.png" alt="">
                                     {{/unless}}
                                 </p>
                             </div>
                         </div>
                     {{/each}}
+                    
                 </div>
             {{/each}}
         `;
   }
 }
+
+const mapStateToProps = (state: StoreState) => ({
+  messagesBlock: state.messagesBlock || [], // только это поле
+});
+
+export default connect(mapStateToProps)(MemberMessages);

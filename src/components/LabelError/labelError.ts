@@ -1,10 +1,12 @@
+import { StoreState } from '../../api/type';
 import Block from '../../core/block';
+import connect from '../../utils/connect';
 
 type LabelErrorProps = {
-    text?: string;
+    textError?: string;
 }
 
-export default class LabelError extends Block {
+class LabelError extends Block {
   constructor(props: LabelErrorProps) {
     super('p', {
       ...props,
@@ -14,7 +16,13 @@ export default class LabelError extends Block {
 
   public render(): string {
     return `
-            {{text}}
+            {{textError}}
         `;
   }
 }
+
+const mapStateToProps = (state: StoreState) => ({
+  textError: state.textError,
+});
+
+export default connect(mapStateToProps)(LabelError);

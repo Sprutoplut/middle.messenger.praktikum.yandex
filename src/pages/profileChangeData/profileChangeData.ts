@@ -1,37 +1,33 @@
+import { StoreState, UserDTO } from '../../api/type';
 import { Button, LabelError, RowInputProfile } from '../../components';
 import Block from '../../core/block';
-import { handleInputValidation } from '../../validation';
+import { handleInputValidation } from '../../helpers/validation';
+import connect from '../../utils/connect';
+import * as usersServices from '../../services/users';
 
 type ProfilePageProps = {
-    value: Array<string>;
+    user: UserDTO;
     isError?: boolean;
 }
 
-export default class ProfilePage extends Block {
+class ProfilePageChangeData extends Block {
   constructor(props:ProfilePageProps) {
     super('form', {
       ...props,
       className: 'profile__list',
       inputErrors: false,
-      formState: {
-        login: '',
-        email: '',
-        first_name: '',
-        second_name: '',
-        phone: '',
-      },
       RowInputProfileEmail: new RowInputProfile({
         name: 'Почта',
         nameValue: 'email',
         type: 'email',
         autocomplete: 'email',
-        value: props.value[0],
-        onBlur: (e) => handleInputValidation(
+        user: props.user,
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState as Record<string, string>,
+          this.props.user as Record<string, string>,
         ),
       }),
       RowInputProfileLogin: new RowInputProfile({
@@ -39,13 +35,13 @@ export default class ProfilePage extends Block {
         nameValue: 'login',
         type: 'text',
         autocomplete: 'login',
-        value: props.value[1],
-        onBlur: (e) => handleInputValidation(
+        user: props.user,
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState as Record<string, string>,
+          this.props.user as Record<string, string>,
         ),
       }),
       RowInputProfileFirstName: new RowInputProfile({
@@ -53,13 +49,13 @@ export default class ProfilePage extends Block {
         nameValue: 'first_name',
         type: 'text',
         autocomplete: 'given-name',
-        value: props.value[2],
-        onBlur: (e) => handleInputValidation(
+        user: props.user,
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState as Record<string, string>,
+          this.props.user as Record<string, string>,
         ),
       }),
       RowInputProfileSecondName: new RowInputProfile({
@@ -67,13 +63,13 @@ export default class ProfilePage extends Block {
         nameValue: 'second_name',
         type: 'text',
         autocomplete: 'family-name',
-        value: props.value[3],
-        onBlur: (e) => handleInputValidation(
+        user: props.user,
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState as Record<string, string>,
+          this.props.user as Record<string, string>,
         ),
       }),
       RowInputProfileDisplayName: new RowInputProfile({
@@ -81,13 +77,13 @@ export default class ProfilePage extends Block {
         nameValue: 'display_name',
         type: 'text',
         autocomplete: 'given-name',
-        value: props.value[4],
-        onBlur: (e) => handleInputValidation(
+        user: props.user,
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState as Record<string, string>,
+          this.props.user as Record<string, string>,
         ),
       }),
       RowInputProfileTel: new RowInputProfile({
@@ -95,17 +91,17 @@ export default class ProfilePage extends Block {
         nameValue: 'phone',
         type: 'tel',
         autocomplete: 'tel',
-        value: props.value[5],
-        onBlur: (e) => handleInputValidation(
+        user: props.user,
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
           this.updateFormState.bind(this),
-          this.props.formState as Record<string, string>,
+          this.props.user as Record<string, string>,
         ),
       }),
       LabelError: new LabelError({
-        text: '',
+        textError: '',
       }),
       SaveButton: new Button({
         text: 'Сохранить',
@@ -120,12 +116,11 @@ export default class ProfilePage extends Block {
             this.setProps.bind(this),
             this.children.LabelError,
             this.updateFormState.bind(this),
-            this.props.formState as Record<string, string>,
+            this.props.user as Record<string, string>,
           );
 
           if (!this.props.isError) {
-            console.log(this.props.formState);
-            // Здесь можно добавить отправку данных на сервер
+            usersServices.changeData(this.props.user as UserDTO);
           }
         },
       },
@@ -133,10 +128,10 @@ export default class ProfilePage extends Block {
   }
 
   // Функция для обновления состояния формы
-  private updateFormState(fieldName: keyof typeof this.props.formState, value: string) {
+  private updateFormState(fieldName: keyof typeof this.props.user, value: string) {
     this.setProps({
-      formState: {
-        ...this.props.formState as Record<string, string>,
+      user: {
+        ...this.props.user as Record<string, string>,
         [fieldName]: value,
       },
     });
@@ -160,3 +155,10 @@ export default class ProfilePage extends Block {
         `;
   }
 }
+
+const mapStateToProps = (state: StoreState) => ({
+  user: state.user,
+  isError: state.isError,
+});
+
+export default connect(mapStateToProps)(ProfilePageChangeData);

@@ -1,38 +1,46 @@
+import { StoreState, UserDTO } from '../../api/type';
 import { RowLabelProfile } from '../../components';
 import Block from '../../core/block';
+import connect from '../../utils/connect';
 
 type ProfilePageProps = {
-    value: Array<string>;
+    user: UserDTO;
 }
 
-export default class ProfilePage extends Block {
+class ProfilePage extends Block {
   constructor(props:ProfilePageProps) {
     super('div', {
       ...props,
       className: 'profile__list',
       RowLabelProfileEmail: new RowLabelProfile({
         name: 'Почта',
-        value: props.value[0],
+        user: props.user,
+        field: 'email',
       }),
       RowLabelProfileLogin: new RowLabelProfile({
         name: 'Логин',
-        value: props.value[1],
+        user: props.user,
+        field: 'login',
       }),
       RowLabelProfileName: new RowLabelProfile({
         name: 'Имя',
-        value: props.value[2],
+        user: props.user,
+        field: 'first_name',
       }),
       RowLabelProfileSecondName: new RowLabelProfile({
         name: 'Фамилия',
-        value: props.value[3],
+        user: props.user,
+        field: 'second_name',
       }),
       RowLabelProfileNameChat: new RowLabelProfile({
         name: 'Имя в чате',
-        value: props.value[4],
+        user: props.user,
+        field: 'display_name',
       }),
       RowLabelProfilePhone: new RowLabelProfile({
         name: 'Телефон',
-        value: props.value[5],
+        user: props.user,
+        field: 'phone',
       }),
     });
   }
@@ -48,3 +56,9 @@ export default class ProfilePage extends Block {
         `;
   }
 }
+
+const mapStateToProps = (state: StoreState) => ({
+  user: state.user,
+});
+
+export default connect(mapStateToProps)(ProfilePage);

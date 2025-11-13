@@ -1,4 +1,6 @@
+import { StoreState } from '../../api/type';
 import Block from '../../core/block';
+import connect from '../../utils/connect';
 import Button from '../Button';
 
 type PopupProps = {
@@ -15,7 +17,7 @@ type PopupProps = {
     onClickPopup?: (e: Event) => void;
 }
 
-export default class Popup extends Block {
+class Popup extends Block {
   constructor(props: PopupProps) {
     super('div', {
       ...props,
@@ -39,7 +41,7 @@ export default class Popup extends Block {
   setLabelText(newText: string) {
     if (this.children.LabelError instanceof Block) {
       this.children.LabelError.setProps(
-        { text: newText },
+        { textError: newText },
       );
     }
   }
@@ -61,3 +63,9 @@ export default class Popup extends Block {
         `;
   }
 }
+
+const mapStateToProps = (state: StoreState) => ({
+  textError: state.textError,
+});
+
+export default connect(mapStateToProps)(Popup);

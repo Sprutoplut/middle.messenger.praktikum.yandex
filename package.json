@@ -13,6 +13,7 @@
     "eslint": "eslint .",
     "eslintfix": "eslint . --fix",
     "stylelint": "stylelint \"**/*.less\"",
+    "stylelintfix": "stylelint \"**/*.less\" --fix",
     "lint": "tsc --noEmit && npm run stylelint && npm run eslint"
   },
   "devDependencies": {

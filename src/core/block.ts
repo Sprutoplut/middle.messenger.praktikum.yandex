@@ -24,7 +24,7 @@ export default abstract class Block {
 
   #element: HTMLElement | null = null;
 
-  #id: string = nanoid(6);
+  #id: string;
 
   get id(): string {
     return this.#id;
@@ -55,7 +55,7 @@ export default abstract class Block {
     };
 
     this.props = this.#makePropsProxy(props);
-
+    this.#id = nanoid(6);
     this.#registerEvents();
     this.#eventBus.emit(Block.EVENTS.INIT);
   }
@@ -127,7 +127,7 @@ export default abstract class Block {
   }
 
   dispatchComponentDidMount() {
-    this.#eventBus().emit(Block.EVENTS.FLOW_CDM);
+    this.#eventBus.emit(Block.EVENTS.FLOW_CDM);
   }
 
   #componentDidUpdate(oldProps: Props, newProps: Props) {
@@ -180,6 +180,7 @@ export default abstract class Block {
 
   #compile() {
     const propsAndStubs = { ...this.props };
+    const template = Handlebars.compile(this.render());
 
     Object.entries(this.children).forEach(([key, child]) => {
       if (Array.isArray(child)) {
@@ -192,7 +193,6 @@ export default abstract class Block {
     });
 
     const fragment = this.#createDocumentElement('template') as HTMLTemplateElement;
-    const template = Handlebars.compile(this.render());
     fragment.innerHTML = template(propsAndStubs);
 
     Object.values(this.children).forEach((child) => {

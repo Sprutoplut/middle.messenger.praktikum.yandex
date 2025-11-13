@@ -1,15 +1,13 @@
 import Block from '../../../../core/block';
 
 type LinkProfileProps = {
-    text?: string;
     onClick?: (e: Event) => void;
 }
 
 export default class LinkProfile extends Block {
   constructor(props: LinkProfileProps) {
-    super('div', {
+    super('a', {
       ...props,
-      className: 'profile__row_link',
       events: {
         click: props.onClick,
       },
@@ -18,7 +16,8 @@ export default class LinkProfile extends Block {
 
   public render(): string {
     return `
-            <a href="" class="profile__link">{{text}}</a>
+            Профиль
+            <img src="/img/ProfileArrow.png" alt="">
         `;
   }
 }

@@ -3,8 +3,9 @@ import Block from '../../core/block';
 
 type LoginLayoutProps = {
     nameForm:string;
-    body: Block;
+    body: Block | unknown;
     textLink: string;
+    href: string;
 }
 
 export default class LoginLayout extends Block {
@@ -17,6 +18,7 @@ export default class LoginLayout extends Block {
       }),
       LinkLogin: new LinkLogin({
         text: props.textLink,
+        href: props.href,
       }),
     });
   }

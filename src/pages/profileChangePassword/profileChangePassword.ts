@@ -1,36 +1,52 @@
+import { ChangePasswordForm, StoreState, UserDTO } from '../../api/type';
 import { Button, LabelError, RowInputProfile } from '../../components';
 import Block from '../../core/block';
-import { handleInputValidation } from '../../validation';
+import { handleInputValidation } from '../../helpers/validation';
+import * as usersServices from '../../services/users';
+import connect from '../../utils/connect';
 
 type ProfilePageProps = {
-    oldPassword: string;
     isError?: boolean;
+    user: UserDTO;
 }
 
-export default class ProfilePage extends Block {
+class ProfilePageChangePassword extends Block {
   constructor(props:ProfilePageProps) {
     super('form', {
       ...props,
+      oldPassword: '',
       className: 'profile__list',
-      inputErrors: false,
       formState: {
         password: '',
+        oldPassword: '',
         password_repeat: '',
       },
+
       RowInputProfileOldPassword: new RowInputProfile({
         name: 'Старый пароль',
         nameValue: 'oldPassword',
+        empty: true,
         type: 'password',
-        readonly: true,
-        value: props.oldPassword,
+        value: '',
+        user: props.user,
+        onBlur: (e: Event) => {
+          this.setProps({
+            formState: {
+              ...this.props.formState as object,
+              oldPassword: e.target !== null ? (e.target as HTMLInputElement).value : '',
+            },
+          });
+        },
       }),
       RowInputProfilePassword: new RowInputProfile({
         name: 'Новый пароль',
         nameValue: 'password',
+        empty: true,
         type: 'password',
         autocomplete: 'new-password',
+        user: props.user,
         value: '',
-        onBlur: (e) => handleInputValidation(
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
@@ -41,9 +57,11 @@ export default class ProfilePage extends Block {
       RowInputProfileRepeatPassword: new RowInputProfile({
         name: 'Повторите новый пароль',
         nameValue: 'password_repeat',
+        empty: true,
+        user: props.user,
         type: 'password',
         value: '',
-        onBlur: (e) => handleInputValidation(
+        onBlur: (e: Event) => handleInputValidation(
           e,
           this.setProps.bind(this),
           this.children.LabelError,
@@ -52,7 +70,7 @@ export default class ProfilePage extends Block {
         ),
       }),
       LabelError: new LabelError({
-        text: '',
+        textError: '',
       }),
       SaveButton: new Button({
         text: 'Сохранить',
@@ -71,7 +89,11 @@ export default class ProfilePage extends Block {
           );
 
           if (!this.props.isError) {
-            console.log(this.props.formState);
+            const releaseForm = {
+              oldPassword: (this.props.formState as ChangePasswordForm).oldPassword,
+              newPassword: (this.props.formState as ChangePasswordForm).password,
+            };
+            usersServices.changePassword(releaseForm);
             // Здесь можно добавить отправку данных на сервер
           }
         },
@@ -94,7 +116,7 @@ export default class ProfilePage extends Block {
             {{{ RowInputProfileOldPassword}}}
             {{{ RowInputProfilePassword}}}
             {{{ RowInputProfileRepeatPassword}}}
-            <input name="avatar" id="profile-avatar" type="file">
+            <input name="avatar" id="profile-avatar" value="" type="file">
             <div class="profile__save">
                 {{#if isError}}
                     {{{LabelError}}}
@@ -104,3 +126,10 @@ export default class ProfilePage extends Block {
         `;
   }
 }
+
+const mapStateToProps = (state: StoreState) => ({
+  user: state.user,
+  isError: state.isError,
+});
+
+export default connect(mapStateToProps)(ProfilePageChangePassword);

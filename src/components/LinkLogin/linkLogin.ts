@@ -2,6 +2,7 @@ import Block from '../../core/block';
 
 type LinkLoginProps = {
     text: string;
+    href: string;
 }
 
 export default class LinkLogin extends Block {
@@ -10,7 +11,7 @@ export default class LinkLogin extends Block {
       ...props,
       className: 'link__login',
       attrs: {
-        href: '#',
+        href: props.href,
       },
     });
   }
