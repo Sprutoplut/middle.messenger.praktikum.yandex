@@ -228,10 +228,17 @@ export default abstract class Block {
   }
 
   getContent(): HTMLElement {
-    if (!this.#element) {
-      throw new Error('Element is not initialized');
-    }
-    return this.#element;
+    setTimeout(() => {
+      if (
+        this.#element?.nodeType === Node.ELEMENT_NODE
+      ) {
+
+        // this.dispatchComponentDidMount();
+        this.#eventBus.emit(Block.EVENTS.FLOW_CDM);
+      }
+    }, 100);
+
+    return this.#element as HTMLElement;
   }
 
   #makePropsProxy(props: Props) {

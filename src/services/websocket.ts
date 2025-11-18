@@ -163,8 +163,8 @@ export default class ChatWebSocket {
   private addMessageToBlocks(message: Message): void {
     const currentBlocks = (window.store.getState() as StoreState).messagesBlock || [];
     const updatedBlocks = addMessageToGroupedBlocks(currentBlocks, message);
-    const sortedBlocks = this.sortBlocksByDateDesc(updatedBlocks);
-    window.store.set({ messagesBlock: sortedBlocks });
+    //const sortedBlocks = this.sortBlocksByDateDesc(updatedBlocks);
+    window.store.set({ messagesBlock: updatedBlocks });
   }
 
   private sendGetOldMessages(offset: number): void {
@@ -322,14 +322,14 @@ export default class ChatWebSocket {
   }
 
   private sortBlocksByDateDesc(blocks: messagesBlock[]): messagesBlock[] {
-    return [...blocks]
-      .filter((block) => block.dateBlock !== undefined)
-      .sort((a, b) => {
-        const aDate = new Date(a.dateBlock!);
-        const bDate = new Date(b.dateBlock!);
-        return bDate.getTime() - aDate.getTime(); // От нового к старому
-      });
-  }
+  return [...blocks]
+    .filter((block) => block.dateBlock !== undefined)
+    .sort((a, b) => {
+      const aDate = new Date(a.dateBlock!);
+      const bDate = new Date(b.dateBlock!);
+      return aDate.getTime() - bDate.getTime(); // a - b = возрастание (старые → новые)
+    });
+}
 
   /**
 * Проверка состояния соединения

@@ -14,18 +14,29 @@
     "eslintfix": "eslint . --fix",
     "stylelint": "stylelint \"**/*.less\"",
     "stylelintfix": "stylelint \"**/*.less\" --fix",
-    "lint": "tsc --noEmit && npm run stylelint && npm run eslint"
+    "lint": "tsc --noEmit && npm run stylelint && npm run eslint",
+    "test": "mocha"
   },
   "devDependencies": {
-    "vite": "^7.1.9",
+    "@types/chai": "^5.2.3",
+    "@types/jsdom": "^27.0.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.10.1",
+    "@types/sinon": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^8.46.0",
     "@typescript-eslint/parser": "^8.46.0",
+    "chai": "^6.2.1",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-base": "^15.0.0",
+    "jsdom": "^27.2.0",
+    "mocha": "^11.7.5",
+    "sinon": "^21.0.0",
     "stylelint": "^16.25.0",
     "stylelint-config-standard": "^39.0.1",
     "stylelint-config-standard-less": "^3.0.1",
-    "typescript": "~5.8.3"
+    "ts-node": "^10.9.2",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.9"
   },
   "dependencies": {
     "@types/handlebars": "^4.0.40",
