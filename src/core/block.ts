@@ -232,7 +232,6 @@ export default abstract class Block {
       if (
         this.#element?.nodeType === Node.ELEMENT_NODE
       ) {
-
         // this.dispatchComponentDidMount();
         this.#eventBus.emit(Block.EVENTS.FLOW_CDM);
       }

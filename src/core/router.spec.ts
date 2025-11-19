@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+import sinon from 'sinon';
+import { expect } from 'chai';
 import Router from './router';
 import Block from './block';
 import Route from './route';
-import sinon from 'sinon';
-import { expect } from 'chai';
 
 type Props = {
   [key: string]: unknown;
@@ -76,7 +77,7 @@ describe('Router', () => {
     router.use('/test', mockBlock);
 
     const foundRoute = router.getRoute('/test');
-    expect(foundRoute).to.equal(router.routes.find(route => route.match('/test')));
+    expect(foundRoute).to.equal(router.routes.find((route) => route.match('/test')));
   });
 
   it('Метод getRoute() должен вернуть wildcard-маршрут, если нет точного совпадения', () => {
@@ -85,9 +86,9 @@ describe('Router', () => {
     router.use('*', mockBlock);
 
     const foundRoute = router.getRoute('/unknown');
-    
+
     // Находим wildcard-маршрут в коллекции
-    const wildcardRoute = router.routes.find(route => route.match('*'));
+    const wildcardRoute = router.routes.find((route) => route.match('*'));
     expect(foundRoute).to.equal(wildcardRoute);
   });
 
@@ -99,5 +100,4 @@ describe('Router', () => {
     router.go('/test');
     expect(renderSpy.calledOnce).to.be.true;
   });
-
 });
