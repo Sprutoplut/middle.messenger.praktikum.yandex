@@ -288,7 +288,7 @@ export default class ChatWebSocket {
 
     // Преобразуем в блоки
     const blocks: messagesBlock[] = sortedMessages.reduce(
-      (acc, msg) => addMessageToGroupedBlocks(acc, msg),
+      (acc, msg) => addMessageToGroupedBlocks(acc, msg, true),
       [] as messagesBlock[],
     );
 
@@ -327,7 +327,7 @@ export default class ChatWebSocket {
       .sort((a, b) => {
         const aDate = new Date(a.dateBlock!);
         const bDate = new Date(b.dateBlock!);
-        return bDate.getTime() - aDate.getTime(); // От нового к старому
+        return bDate.getTime() - aDate.getTime(); // a - b = возрастание (старые → новые)
       });
   }
 
@@ -343,6 +343,7 @@ export default class ChatWebSocket {
 function addMessageToGroupedBlocks(
   blocks: messagesBlock[],
   message: Message,
+  history: boolean = false,
 ): messagesBlock[] {
   const messageDate = formatDateForBlock(message.timestamp);
 
@@ -372,9 +373,26 @@ function addMessageToGroupedBlocks(
 
       return aTime - bTime;
     });
-  } else {
+  } else if (history === true) {
     // Создаём новый блок
     blocks.push({
+      dateBlock: messageDate,
+      messages: [
+        {
+          message: message.content,
+          time: new Date(message.timestamp).toLocaleTimeString('ru-RU', {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+          author: message.userId === ((window.store.getState() as StoreState).user as UserDTO).id ? '' : 'author',
+          read: message.is_read ? 'Read' : '',
+          id: message.id,
+        },
+      ],
+    });
+  } else {
+    // Создаём новый блок
+    blocks.unshift({
       dateBlock: messageDate,
       messages: [
         {
